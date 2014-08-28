@@ -1,0 +1,236 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:36 +0000">
+
+<link rel="stylesheet" type="text/css" href="../stylesheet.css">
+<link rel="start" href="../overview-summary.html">
+
+<title>Cache\Memcache.php (SucoPHP API Doc)</title>
+
+</head>
+<body id="file" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\cache\memcache.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<h1>Cache\Memcache.php</h1>
+<hr>
+
+<a name="line1"></a><pre><?php
+<a name="line2"></a>
+<a name="line3"></a>/**
+<a name="line4"></a> * Suco_Cache_Memcache, Memcache 缓存封装
+<a name="line5"></a> * 完全继承原始 Memcache 类的所以特性
+<a name="line6"></a> *
+<a name="line7"></a> * @version		3.0 2009/09/01
+<a name="line8"></a> * @license		http://www.suconet.com/license
+<a name="line9"></a> * @author		Eric Yu (blueflu@live.cn)
+<a name="line10"></a> * @copyright	Copyright (c) 2009, Suconet, Inc.
+<a name="line11"></a> * @package		Cache
+<a name="line12"></a> *
+<a name="line13"></a> * <b>Memcache 应用实例:</b>
+<a name="line14"></a> * <code>
+<a name="line15"></a> *	$memcache = new Suco_Cache_Memcache();
+<a name="line16"></a> *	$memcache->setServer(127.0.0.1);
+<a name="line17"></a> *	$memcache->setPort(11211)
+<a name="line18"></a> *	if (!$data = $memcache->load('block_id')) {
+<a name="line19"></a> *		$memcache->save('test content...', 3600);
+<a name="line20"></a> *	}
+<a name="line21"></a> *	echo $data;
+<a name="line22"></a> *	//test content
+<a name="line23"></a> * </code>
+<a name="line24"></a> *
+<a name="line25"></a> */
+<a name="line26"></a>
+<a name="line27"></a>class Suco_Cache_Memcache extends Memcache implements Suco_Cache_Interface
+<a name="line28"></a>{
+<a name="line29"></a>	protected $_host = '127.0.0.1';
+<a name="line30"></a>	protected $_port = '11211';
+<a name="line31"></a>	protected $_persistent = false;
+<a name="line32"></a>	protected $_timeout = 1;
+<a name="line33"></a>
+<a name="line34"></a>	protected $_currentId = 'd1';
+<a name="line35"></a>
+<a name="line36"></a>	/**
+<a name="line37"></a>	 * 析构函数
+<a name="line38"></a>	 * 关闭Memcache连接
+<a name="line39"></a>	 */
+<a name="line40"></a>	public function __destruct()
+<a name="line41"></a>	{
+<a name="line42"></a>		parent::close();
+<a name="line43"></a>	}
+<a name="line44"></a>
+<a name="line45"></a>	/**
+<a name="line46"></a>	 * 单件实例
+<a name="line47"></a>	 */
+<a name="line48"></a>	public static function instance()
+<a name="line49"></a>	{
+<a name="line50"></a>		static $instance;
+<a name="line51"></a>		if (!isset($instance)) {
+<a name="line52"></a>			$instance = new self();
+<a name="line53"></a>		}
+<a name="line54"></a>		return $instance;
+<a name="line55"></a>	}
+<a name="line56"></a>
+<a name="line57"></a>	public function connect($host, $port, $timeout = 1)
+<a name="line58"></a>	{
+<a name="line59"></a>		$this->setServer($host);
+<a name="line60"></a>		$this->setPort($port);
+<a name="line61"></a>		$this->setConnectTimeout($timeout);
+<a name="line62"></a>
+<a name="line63"></a>		return parent::connect($host, $port, $timeout);
+<a name="line64"></a>	}
+<a name="line65"></a>
+<a name="line66"></a>	/**
+<a name="line67"></a>	 * 设置是否常连接
+<a name="line68"></a>	 * @param bool $flag
+<a name="line69"></a>	 */
+<a name="line70"></a>	public function setPconnect($flag)
+<a name="line71"></a>	{
+<a name="line72"></a>		$this->_persistent = $flag;
+<a name="line73"></a>	}
+<a name="line74"></a>
+<a name="line75"></a>	/**
+<a name="line76"></a>	 * 设置连接超时时间
+<a name="line77"></a>	 * @param int $timeout
+<a name="line78"></a>	 */
+<a name="line79"></a>	public function setConnectTimeout($timeout)
+<a name="line80"></a>	{
+<a name="line81"></a>		$this->_timeout = $timeout;
+<a name="line82"></a>	}
+<a name="line83"></a>
+<a name="line84"></a>	/**
+<a name="line85"></a>	 * 设置服务器地址
+<a name="line86"></a>	 * @param string $host
+<a name="line87"></a>	 */
+<a name="line88"></a>	public function setServer($host)
+<a name="line89"></a>	{
+<a name="line90"></a>		$this->_host = $host;
+<a name="line91"></a>	}
+<a name="line92"></a>
+<a name="line93"></a>	/**
+<a name="line94"></a>	 * 设置端口地址
+<a name="line95"></a>	 * @param string $host
+<a name="line96"></a>	 */
+<a name="line97"></a>	public function setPort($port)
+<a name="line98"></a>	{
+<a name="line99"></a>		$this->_port = $port;
+<a name="line100"></a>	}
+<a name="line101"></a>
+<a name="line102"></a>	/**
+<a name="line103"></a>	 * 取出所有缓存块
+<a name="line104"></a>	 * @return array
+<a name="line105"></a>	 */
+<a name="line106"></a>	public function getAllBlocks($prefix = '')
+<a name="line107"></a>	{
+<a name="line108"></a>		$hostMark = "$this->_host:$this->_port";
+<a name="line109"></a>		$items = $this->getExtendedStats('items');
+<a name="line110"></a>		$items = $items[$hostMark]['items'];
+<a name="line111"></a>		
+<a name="line112"></a>		$data = array();
+<a name="line113"></a>		foreach((array)$items as $key=>$values){
+<a name="line114"></a>			$number = $key;
+<a name="line115"></a>			$str = $this->getExtendedStats("cachedump", $number, 0);
+<a name="line116"></a>			$line = $str[$hostMark];
+<a name="line117"></a>			if(is_array($line) && count($line) > 0) {
+<a name="line118"></a>				foreach($line as $key => $value){
+<a name="line119"></a>					if (substr($key, 0, strlen($prefix)) == $prefix) {
+<a name="line120"></a>						$data[$key] = $this->get($key);
+<a name="line121"></a>					}
+<a name="line122"></a>				}
+<a name="line123"></a>			}
+<a name="line124"></a>		}
+<a name="line125"></a>		return $data;
+<a name="line126"></a>	}
+<a name="line127"></a>
+<a name="line128"></a>	/**
+<a name="line129"></a>	 * 载入缓存块
+<a name="line130"></a>	 *
+<a name="line131"></a>	 * @param string|int $id
+<a name="line132"></a>	 *
+<a name="line133"></a>	 * @return mixed
+<a name="line134"></a>	 */
+<a name="line135"></a>	public function load($id)
+<a name="line136"></a>	{
+<a name="line137"></a>		$this->_currentId = $id;
+<a name="line138"></a>		return $this->get($id);
+<a name="line139"></a>	}
+<a name="line140"></a>
+<a name="line141"></a>	/**
+<a name="line142"></a>	 * 保存缓存
+<a name="line143"></a>	 *
+<a name="line144"></a>	 * @param mixed $data 数据
+<a name="line145"></a>	 * @param mixed $exp 有效期
+<a name="line146"></a>	 * @param mixed $id 块ID
+<a name="line147"></a>	 *
+<a name="line148"></a>	 * @return mixed
+<a name="line149"></a>	 */
+<a name="line150"></a>	public function save($data, $exp = 0, $id = null)
+<a name="line151"></a>	{
+<a name="line152"></a>		if (!$id) {
+<a name="line153"></a>			$id = $this->_currentId;
+<a name="line154"></a>		}
+<a name="line155"></a>		return $this->set($id, $data, 0, $exp);
+<a name="line156"></a>	}
+<a name="line157"></a>
+<a name="line158"></a>	/**
+<a name="line159"></a>	 * 删除缓存块
+<a name="line160"></a>	 * @param  string $id 块ID
+<a name="line161"></a>	 * @return bool
+<a name="line162"></a>	 */
+<a name="line163"></a>	public function delete($id)
+<a name="line164"></a>	{
+<a name="line165"></a>		return parent::delete($id);
+<a name="line166"></a>	}
+<a name="line167"></a>
+<a name="line168"></a>	/**
+<a name="line169"></a>	 * 清空所有缓存
+<a name="line170"></a>	 * @return void
+<a name="line171"></a>	 */
+<a name="line172"></a>	public function flush()
+<a name="line173"></a>	{
+<a name="line174"></a>		return parent::flush();
+<a name="line175"></a>	}
+<a name="line176"></a>}</pre>
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\cache\memcache.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

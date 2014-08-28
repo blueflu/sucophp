@@ -1,0 +1,417 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:36 +0000">
+
+<link rel="stylesheet" type="text/css" href="../stylesheet.css">
+<link rel="start" href="../overview-summary.html">
+
+<title>Db\Adapter\Mssql.php (SucoPHP API Doc)</title>
+
+</head>
+<body id="file" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\db\adapter\mssql.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<h1>Db\Adapter\Mssql.php</h1>
+<hr>
+
+<a name="line1"></a><pre><?php
+<a name="line2"></a>/**
+<a name="line3"></a> * MSSQL 数据库驱动
+<a name="line4"></a> *
+<a name="line5"></a> * @version		3.0 2009/09/01 01:31
+<a name="line6"></a> * @author		blueflu (lqhuanle@163.com)
+<a name="line7"></a> * @copyright	Copyright (c) 2008, Suconet, Inc.
+<a name="line8"></a> * @license		http://www.suconet.com/license
+<a name="line9"></a> * @package		Db
+<a name="line10"></a> * -----------------------------------------------------------
+<a name="line11"></a> */
+<a name="line12"></a>require_once 'Suco/Db/Adapter/Abstract.php';
+<a name="line13"></a>
+<a name="line14"></a>class Suco_Db_Adapter_Mssql extends Suco_Db_Adapter_Abstract
+<a name="line15"></a>{
+<a name="line16"></a>	/**
+<a name="line17"></a>	 * 指定数据库的数值类型
+<a name="line18"></a>	 *
+<a name="line19"></a>	 * @var array
+<a name="line20"></a>	 */
+<a name="line21"></a>	protected $_numericDataTypes = array('int', 'mediumint', 'smallint', 'bigint', 'tinyint', 'double', 'float', 'decimal');
+<a name="line22"></a>
+<a name="line23"></a>	/**
+<a name="line24"></a>	 * 设置数据库使用字符集
+<a name="line25"></a>	 *
+<a name="line26"></a>	 * @param string $charset
+<a name="line27"></a>	 */
+<a name="line28"></a>	public function setCharset($charset)
+<a name="line29"></a>	{
+<a name="line30"></a>		//$version = $this->getVersion();
+<a name="line31"></a>		$version = 5;
+<a name="line32"></a>		if ($version >= 5) {
+<a name="line33"></a>			$this->execute("SET NAMES {$charset}");
+<a name="line34"></a>		} else {
+<a name="line35"></a>			$this->execute("SET character_set_client={$charset}");
+<a name="line36"></a>			$this->execute("SET character_set_connection={$charset}");
+<a name="line37"></a>		}
+<a name="line38"></a>	}
+<a name="line39"></a>
+<a name="line40"></a>	/**
+<a name="line41"></a>	 * 返回最后一次插入ID
+<a name="line42"></a>	 */
+<a name="line43"></a>	public function getInsertId()
+<a name="line44"></a>	{
+<a name="line45"></a>		return mysql_insert_id($this->_linkId);
+<a name="line46"></a>	}
+<a name="line47"></a>
+<a name="line48"></a>	/**
+<a name="line49"></a>	 * 返回当前数据库中的所有数据表
+<a name="line50"></a>	 *
+<a name="line51"></a>	 * @return array
+<a name="line52"></a>	 */
+<a name="line53"></a>	public function getTableList()
+<a name="line54"></a>	{
+<a name="line55"></a>		$tables = $this->execute('SHOW TABLES')->fetchCols('Tables_in_'.$this->_dsn['name']);
+<a name="line56"></a>
+<a name="line57"></a>		return $tables;
+<a name="line58"></a>	}
+<a name="line59"></a>
+<a name="line60"></a>	/**
+<a name="line61"></a>	 * 返回指定数据表的结构
+<a name="line62"></a>	 *
+<a name="line63"></a>	 * 字段属性说明:
+<a name="line64"></a>	 * field[string]		字段名
+<a name="line65"></a>	 * unsigned[bool]		是否唯一
+<a name="line66"></a>	 * type[string]			字段类型
+<a name="line67"></a>	 * length[int]			字段长度
+<a name="line68"></a>	 * precision[int]		整数位数
+<a name="line69"></a>	 * scale[int]			小数位数
+<a name="line70"></a>	 * primary[bool]		主键
+<a name="line71"></a>	 * extra[string]		扩展
+<a name="line72"></a>	 * identity[bool]		是否为ID
+<a name="line73"></a>	 * null[bool]			是否允许为空
+<a name="line74"></a>	 * default[string]		默认值
+<a name="line75"></a>	 *
+<a name="line76"></a>	 * @param string $table
+<a name="line77"></a>	 * @return array
+<a name="line78"></a>	 */
+<a name="line79"></a>	public function getDescribeTable($table)
+<a name="line80"></a>	{
+<a name="line81"></a>		static $fd = array();
+<a name="line82"></a>		if (!isset($fd[$table])) {
+<a name="line83"></a>			$list = $this->execute("DESCRIBE {$table}")->fetchAll();
+<a name="line84"></a>			foreach ($list as $k => $item) {
+<a name="line85"></a>				$d[$k]['FIELD'] = $item['Field'];
+<a name="line86"></a>				if (preg_match('/unsigned/', $item['Type'])) {
+<a name="line87"></a>					$d[$k]['UNSIGNED'] = true;
+<a name="line88"></a>				}
+<a name="line89"></a>				if (preg_match('/^(\w+)\((\d+)\)/', $item['Type'], $s)) {
+<a name="line90"></a>					$d[$k]['TYPE'] = $s[1];
+<a name="line91"></a>					$d[$k]['LENGTH'] = $s[2];
+<a name="line92"></a>				} else if (preg_match('/^decimal\((\d+),(\d+)\)/', $item['Type'], $s)) {
+<a name="line93"></a>					$d[$k]['TYPE'] = 'decimal';
+<a name="line94"></a>					$d[$k]['PRECISION'] = $s[1];
+<a name="line95"></a>					$d[$k]['SCALE'] = $s[2];
+<a name="line96"></a>				} else {
+<a name="line97"></a>					$d[$k]['TYPE'] = $item['Type'];
+<a name="line98"></a>				}
+<a name="line99"></a>				if ($item['Key'] == 'PRI') {
+<a name="line100"></a>					$d[$k]['PRIMARY'] = true;
+<a name="line101"></a>					if ($item['Extra'] == 'auto_increment') {
+<a name="line102"></a>						$d[$k]['IDENTITY'] = true;
+<a name="line103"></a>					}
+<a name="line104"></a>				}
+<a name="line105"></a>				$d[$k]['NULL'] = $item['Null'] == 'YES' ? 1 : 0;
+<a name="line106"></a>				if ($item['Default']) { $d[$k]['DEFAULT'] = $item['Default']; }
+<a name="line107"></a>			}
+<a name="line108"></a>			$fd[$table] = $d;
+<a name="line109"></a>		}
+<a name="line110"></a>		return $fd[$table];
+<a name="line111"></a>	}
+<a name="line112"></a>
+<a name="line113"></a>	/**
+<a name="line114"></a>	 * 返回查询影响条数
+<a name="line115"></a>	 *
+<a name="line116"></a>	 * @return string
+<a name="line117"></a>	 */
+<a name="line118"></a>	public function getAffectedRows()
+<a name="line119"></a>	{
+<a name="line120"></a>		return mssql_rows_affected($this->_linkId);
+<a name="line121"></a>	}
+<a name="line122"></a>
+<a name="line123"></a>	/**
+<a name="line124"></a>	 * 返回当前数据库版本
+<a name="line125"></a>	 *
+<a name="line126"></a>	 * @return string
+<a name="line127"></a>	 */
+<a name="line128"></a>	public function getVersion()
+<a name="line129"></a>	{
+<a name="line130"></a>		static $version;
+<a name="line131"></a>		if (!$version) {
+<a name="line132"></a>			$version = $this->execute("SELECT VERSION() AS version")->fetchCol('version');
+<a name="line133"></a>			$version = number_format($version, 1);
+<a name="line134"></a>		}
+<a name="line135"></a>
+<a name="line136"></a>		return $version;
+<a name="line137"></a>	}
+<a name="line138"></a>
+<a name="line139"></a>	/**
+<a name="line140"></a>	 * 数据库连接
+<a name="line141"></a>	 *
+<a name="line142"></a>	 * @param array $dsn
+<a name="line143"></a>	 * @param bool $persistent 是否进行持久连接
+<a name="line144"></a>	 */
+<a name="line145"></a>	public function connect($host, $port, $user, $pass, $persistent = false)
+<a name="line146"></a>	{
+<a name="line147"></a>		$this->_dsn = array(
+<a name="line148"></a>			'host' => $host,
+<a name="line149"></a>			'port' => $port,
+<a name="line150"></a>			'user' => $user,
+<a name="line151"></a>			'pass' => $pass
+<a name="line152"></a>		);
+<a name="line153"></a>
+<a name="line154"></a>		if ($port) {
+<a name="line155"></a>			$host = "{$host}:{$port}";
+<a name="line156"></a>		}
+<a name="line157"></a>
+<a name="line158"></a>		if ($persistent) {
+<a name="line159"></a>			$this->_linkId = @mssql_pconnect($host, $user, $pass);
+<a name="line160"></a>		} else {
+<a name="line161"></a>			$this->_linkId = @mssql_connect($host, $user, $pass, true);
+<a name="line162"></a>		}
+<a name="line163"></a>
+<a name="line164"></a>		if (!$this->_linkId) {
+<a name="line165"></a>			require_once 'Suco/Db/Exception.php';
+<a name="line166"></a>			throw new Suco_Db_Exception("无法连接数据库服务器. ", 1001);
+<a name="line167"></a>		}
+<a name="line168"></a>	}
+<a name="line169"></a>
+<a name="line170"></a>	/**
+<a name="line171"></a>	 * 打开指定数据库
+<a name="line172"></a>	 *
+<a name="line173"></a>	 * @param string $dnName
+<a name="line174"></a>	 */
+<a name="line175"></a>	public function selectdb($dbName)
+<a name="line176"></a>	{
+<a name="line177"></a>		$this->_dsn['name'] = $dbName;
+<a name="line178"></a>		$this->execute("USE [{$dbName}]");
+<a name="line179"></a>	}
+<a name="line180"></a>
+<a name="line181"></a>	/**
+<a name="line182"></a>	 * 执行一条sql查询
+<a name="line183"></a>	 *
+<a name="line184"></a>	 * @param string $sql
+<a name="line185"></a>	 *
+<a name="line186"></a>	 * @return Suco_Db_Result_Abstract
+<a name="line187"></a>	 */
+<a name="line188"></a>	public function execute($sql, $return = true)
+<a name="line189"></a>	{
+<a name="line190"></a>		$beginTime = $this->_getMicrotime();
+<a name="line191"></a>		$result = mssql_query($sql, $this->_linkId);
+<a name="line192"></a>		$executeTime = $this->_getMicrotime() - $beginTime;
+<a name="line193"></a>		$this->_querys[] = array(
+<a name="line194"></a>			'runtime'	=> $executeTime,
+<a name="line195"></a>			'query'		=> $sql,
+<a name="line196"></a>			'result'	=> $this->getAffectedRows(),
+<a name="line197"></a>		);
+<a name="line198"></a>		$this->_totalExecuteTime+= $executeTime;
+<a name="line199"></a>		$this->_totalExecuteQuantity++;
+<a name="line200"></a>
+<a name="line201"></a>		//if (mysql_errno($this->_linkId)) {
+<a name="line202"></a>			//require_once 'Suco/Db/Exception.php';
+<a name="line203"></a>			//throw new Suco_Db_Exception("{$sql} 执行失败. [".mysql_error()."]", 1002);
+<a name="line204"></a>		//}
+<a name="line205"></a>
+<a name="line206"></a>		require_once 'Suco/Db/Result/Mysql.php';
+<a name="line207"></a>		return new Suco_Db_Result_Mysql($result);
+<a name="line208"></a>	}
+<a name="line209"></a>
+<a name="line210"></a>	/**
+<a name="line211"></a>	 * 关闭当前数据库连接
+<a name="line212"></a>	 */
+<a name="line213"></a>	public function close()
+<a name="line214"></a>	{
+<a name="line215"></a>		mssql_close($this->_linkId);
+<a name="line216"></a>	}
+<a name="line217"></a>
+<a name="line218"></a>	/**
+<a name="line219"></a>	 * 启动事务处理
+<a name="line220"></a>	 */
+<a name="line221"></a>	public function beginTrans()
+<a name="line222"></a>	{
+<a name="line223"></a>		$this->execute("START TRANSACTION");
+<a name="line224"></a>	}
+<a name="line225"></a>
+<a name="line226"></a>	/**
+<a name="line227"></a>	 * 回滚
+<a name="line228"></a>	 */
+<a name="line229"></a>	public function rollback()
+<a name="line230"></a>	{
+<a name="line231"></a>		$this->execute("ROLLBACK");
+<a name="line232"></a>	}
+<a name="line233"></a>
+<a name="line234"></a>	/**
+<a name="line235"></a>	 * SAVEPOINT
+<a name="line236"></a>	 */
+<a name="line237"></a>	public function savepoint($key)
+<a name="line238"></a>	{
+<a name="line239"></a>		$this->execute("SAVEPOINT {$key}");
+<a name="line240"></a>	}
+<a name="line241"></a>
+<a name="line242"></a>	/**
+<a name="line243"></a>	 * 提交事务
+<a name="line244"></a>	 */
+<a name="line245"></a>	public function commit()
+<a name="line246"></a>	{
+<a name="line247"></a>		$this->execute("COMMIT");
+<a name="line248"></a>	}
+<a name="line249"></a>
+<a name="line250"></a>	/**
+<a name="line251"></a>	 * 添加关键字符号
+<a name="line252"></a>	 *
+<a name="line253"></a>	 * @param string $value
+<a name="line254"></a>	 * @param string $prefix
+<a name="line255"></a>	 *
+<a name="line256"></a>	 * @return string
+<a name="line257"></a>	 */
+<a name="line258"></a>	public function addSymbol($string)
+<a name="line259"></a>	{
+<a name="line260"></a>		if (false !== strpos($string, '(') || false !== strpos($string, 'AS')
+<a name="line261"></a>			|| false !== strpos($string, 'as')
+<a name="line262"></a>			|| false !== strpos($string, '[')) {
+<a name="line263"></a>			return $string;
+<a name="line264"></a>		}
+<a name="line265"></a>		$keywords = explode('.', $string);
+<a name="line266"></a>		foreach ($keywords as $pos => $keyword) {
+<a name="line267"></a>			if ('*' == $keyword) {
+<a name="line268"></a>				continue;
+<a name="line269"></a>			}
+<a name="line270"></a>			$keywords[$pos] = '' . trim($keyword) . '';
+<a name="line271"></a>		}
+<a name="line272"></a>
+<a name="line273"></a>		return implode('.', $keywords);
+<a name="line274"></a>	}
+<a name="line275"></a>
+<a name="line276"></a>	/*
+<a name="line277"></a>	public function addSymbol($string, $prefix = null)
+<a name="line278"></a>	{
+<a name="line279"></a>		if (false !== strpos($string, '(') || false !== strpos($string, 'AS')
+<a name="line280"></a>			|| false !== strpos($string, 'as')
+<a name="line281"></a>			|| false !== strpos($string, '`')
+<a name="line282"></a>			|| $string !== '*') {
+<a name="line283"></a>			return $string;
+<a name="line284"></a>		}
+<a name="line285"></a>		$p = explode('.', $string);
+<a name="line286"></a>		switch (count($p)) {
+<a name="line287"></a>			case 1:
+<a name="line288"></a>				$s1 = $prefix ? "`{$prefix}`" : null;
+<a name="line289"></a>				$s2 = $p[0] != '*' ? "`{$p[0]}`" : $p[0];
+<a name="line290"></a>				return $s1 ? "{$s1}.{$s2}" : $s2;
+<a name="line291"></a>				break;
+<a name="line292"></a>			case 2:
+<a name="line293"></a>				return "`{$p[0]}`.`{$p[1]}`";
+<a name="line294"></a>		}
+<a name="line295"></a>	}
+<a name="line296"></a>	*/
+<a name="line297"></a>
+<a name="line298"></a>	/**
+<a name="line299"></a>	 * 添加记录方法
+<a name="line300"></a>	 *
+<a name="line301"></a>	 * @param array $data
+<a name="line302"></a>	 * @return int
+<a name="line303"></a>	 */
+<a name="line304"></a>	public function insert($table, $data)
+<a name="line305"></a>	{
+<a name="line306"></a>		if (!$data) { return false; }
+<a name="line307"></a>		if ($data instanceof Suco_Db_Table_Row) {
+<a name="line308"></a>			$data = $data->toArray();
+<a name="line309"></a>		}
+<a name="line310"></a>		if (!is_array($data)) {
+<a name="line311"></a>			require_once 'Suco/Db/Exception.php';
+<a name="line312"></a>			throw new Suco_Db_Exception('被插入记录必须是一个数组');
+<a name="line313"></a>		}
+<a name="line314"></a>		foreach ((array)$data as $field => $value) {
+<a name="line315"></a>			$fields[] = $this->addSymbol($field);
+<a name="line316"></a>			$values[] = $this->addQuote($value);
+<a name="line317"></a>		}
+<a name="line318"></a>		$qStr = sprintf('INSERT INTO %s (%s)VALUES(%s)', $this->addSymbol($table), @implode(',', $fields), @implode(',', $values));
+<a name="line319"></a>		$this->execute($qStr);
+<a name="line320"></a>
+<a name="line321"></a>		return $this->getInsertId();
+<a name="line322"></a>	}
+<a name="line323"></a>
+<a name="line324"></a>	/**
+<a name="line325"></a>	 * 更新记录方法
+<a name="line326"></a>	 *
+<a name="line327"></a>	 * @param string|array $data
+<a name="line328"></a>	 * @param string $cond
+<a name="line329"></a>	 * @return int
+<a name="line330"></a>	 */
+<a name="line331"></a>	public function update($table, $data, $cond = 1)
+<a name="line332"></a>	{
+<a name="line333"></a>		if (!$data) { return false; }
+<a name="line334"></a>		if (is_array($data)) {
+<a name="line335"></a>			foreach ($data as $field => $value) {
+<a name="line336"></a>				$item[] = $this->addSymbol($field) . '=' . $this->addQuote($value);
+<a name="line337"></a>			}
+<a name="line338"></a>			$data = @implode(',', $item);
+<a name="line339"></a>		}
+<a name="line340"></a>
+<a name="line341"></a>		$qStr = sprintf('UPDATE %s SET %s WHERE %s', $this->addSymbol($table), $data, $cond);
+<a name="line342"></a>		$this->execute($qStr);
+<a name="line343"></a>	}
+<a name="line344"></a>
+<a name="line345"></a>	/**
+<a name="line346"></a>	 * 删除记录方法
+<a name="line347"></a>	 *
+<a name="line348"></a>	 * @param string $cond
+<a name="line349"></a>	 * @return int
+<a name="line350"></a>	 */
+<a name="line351"></a>	public function delete($table, $cond = 1)
+<a name="line352"></a>	{
+<a name="line353"></a>		$qStr = sprintf('DELETE FROM %s WHERE %s', $this->addSymbol($table), $cond);
+<a name="line354"></a>		$this->execute($qStr);
+<a name="line355"></a>	}
+<a name="line356"></a>}
+<a name="line357"></a>?></pre>
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\db\adapter\mssql.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

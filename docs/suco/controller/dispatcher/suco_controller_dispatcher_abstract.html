@@ -1,0 +1,262 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:34 +0000">
+
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css">
+<link rel="start" href="../../../overview-summary.html">
+
+<title>Suco_Controller_Dispatcher_Abstract (SucoPHP API Doc)</title>
+
+</head>
+<body id="definition" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../suco/controller/dispatcher/package-summary.html">Namespace</a></li>
+<li class="active">Class</li>
+<li><a href="../../../suco/controller/dispatcher/package-tree.html">Tree</a></li>
+<li><a href="../../../overview-files.html">Files</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../todo-list.html">Todo</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../../../index.html" target="_top">Frames</a>
+<a href="../../../suco\controller\dispatcher\suco_controller_dispatcher_abstract.html" target="_top">No frames</a>
+</div>
+<div class="small_links">
+Summary: <a href="#summary_field">Field</a> | <a href="#summary_method">Method</a> | <a href="#summary_constr">Constr</a>
+Detail: <a href="#detail_field">Field</a> | <a href="#detail_method">Method</a> | <a href="#summary_constr">Constr</a>
+</div>
+<hr>
+
+<div class="qualifiedName">Suco\Controller\Dispatcher\Suco_Controller_Dispatcher_Abstract</div>
+<a href="../../../source/controller/dispatcher/abstract.php.html#line15" class="location">Controller\Dispatcher\Abstract.php at line 15</a>
+
+<h1>Class Suco_Controller_Dispatcher_Abstract</h1>
+
+<pre class="tree"><strong>Suco_Controller_Dispatcher_Abstract</strong><br /></pre>
+
+<dl>
+<dt>All Known Subclasses:</dt>
+<dd><a href="../../../suco/controller/dispatcher/suco_controller_dispatcher_standard.html">Suco_Controller_Dispatcher_Standard</a> </dd>
+</dl>
+
+<hr>
+
+<p class="signature">public  class <strong>Suco_Controller_Dispatcher_Abstract</strong></p>
+
+<div class="comment" id="overview_description"><p>Suco_Controller_Dispatcher_Abstract 分发器抽象</p></div>
+
+<dl>
+<dt>Version:</dt>
+<dd>3.0 2009/09/01</dd>
+<dt>Author:</dt>
+<dd>Eric Yu (blueflu@live.cn)</dd>
+<dt>Copyright:</dt>
+<dd>Copyright (c) 2008, Suconet, Inc.</dd>
+<dt>License:</dt>
+<dd>http://www.suconet.com/license</dd>
+</dl>
+<hr>
+
+<table id="summary_method">
+<tr><th colspan="2">Method Summary</th></tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setModule()">setModule</a>(string module)</p><p class="description">设置当前模块</p></td>
+</tr>
+<tr>
+<td class="type"> string</td>
+<td class="description"><p class="name"><a href="#getModule()">getModule</a>()</p><p class="description">返回当前模块</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setController()">setController</a>(string controller)</p><p class="description">设置当前控制器</p></td>
+</tr>
+<tr>
+<td class="type"> string</td>
+<td class="description"><p class="name"><a href="#getController()">getController</a>()</p><p class="description">返回当前控制器</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setAction()">setAction</a>(string action)</p><p class="description">设置当前动作</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#getAction()">getAction</a>()</p><p class="description">返回当前动作</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setDefaultModule()">setDefaultModule</a>(string module)</p><p class="description">设置默认模块</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#getDefaultModule()">getDefaultModule</a>()</p><p class="description">返回默认模块</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setDefaultController()">setDefaultController</a>(string controller)</p><p class="description">设置默认控制器</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#getDefaultController()">getDefaultController</a>()</p><p class="description">返回默认控制器</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setDefaultAction()">setDefaultAction</a>(string action)</p><p class="description">设置默认动作</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#getDefaultAction()">getDefaultAction</a>()</p><p class="description">返回默认动作</p></td>
+</tr>
+</table>
+
+<h2 id="detail_method">Method Detail</h2>
+<a href="../../../source/controller/dispatcher/abstract.php.html#line56" class="location">Controller\Dispatcher\Abstract.php at line 56</a>
+
+<h3 id="setModule()">setModule</h3>
+<code class="signature">public  void <strong>setModule</strong>(string module)</code>
+<div class="details">
+<p>设置当前模块</p></div>
+
+<hr>
+
+<a href="../../../source/controller/dispatcher/abstract.php.html#line66" class="location">Controller\Dispatcher\Abstract.php at line 66</a>
+
+<h3 id="getModule()">getModule</h3>
+<code class="signature">public  string <strong>getModule</strong>()</code>
+<div class="details">
+<p>返回当前模块</p></div>
+
+<hr>
+
+<a href="../../../source/controller/dispatcher/abstract.php.html#line77" class="location">Controller\Dispatcher\Abstract.php at line 77</a>
+
+<h3 id="setController()">setController</h3>
+<code class="signature">public  void <strong>setController</strong>(string controller)</code>
+<div class="details">
+<p>设置当前控制器</p></div>
+
+<hr>
+
+<a href="../../../source/controller/dispatcher/abstract.php.html#line87" class="location">Controller\Dispatcher\Abstract.php at line 87</a>
+
+<h3 id="getController()">getController</h3>
+<code class="signature">public  string <strong>getController</strong>()</code>
+<div class="details">
+<p>返回当前控制器</p></div>
+
+<hr>
+
+<a href="../../../source/controller/dispatcher/abstract.php.html#line106" class="location">Controller\Dispatcher\Abstract.php at line 106</a>
+
+<h3 id="setAction()">setAction</h3>
+<code class="signature">public  void <strong>setAction</strong>(string action)</code>
+<div class="details">
+<p>设置当前动作</p></div>
+
+<hr>
+
+<a href="../../../source/controller/dispatcher/abstract.php.html#line116" class="location">Controller\Dispatcher\Abstract.php at line 116</a>
+
+<h3 id="getAction()">getAction</h3>
+<code class="signature">public  void <strong>getAction</strong>()</code>
+<div class="details">
+<p>返回当前动作</p></div>
+
+<hr>
+
+<a href="../../../source/controller/dispatcher/abstract.php.html#line127" class="location">Controller\Dispatcher\Abstract.php at line 127</a>
+
+<h3 id="setDefaultModule()">setDefaultModule</h3>
+<code class="signature">public  void <strong>setDefaultModule</strong>(string module)</code>
+<div class="details">
+<p>设置默认模块</p></div>
+
+<hr>
+
+<a href="../../../source/controller/dispatcher/abstract.php.html#line137" class="location">Controller\Dispatcher\Abstract.php at line 137</a>
+
+<h3 id="getDefaultModule()">getDefaultModule</h3>
+<code class="signature">public  void <strong>getDefaultModule</strong>()</code>
+<div class="details">
+<p>返回默认模块</p></div>
+
+<hr>
+
+<a href="../../../source/controller/dispatcher/abstract.php.html#line148" class="location">Controller\Dispatcher\Abstract.php at line 148</a>
+
+<h3 id="setDefaultController()">setDefaultController</h3>
+<code class="signature">public  void <strong>setDefaultController</strong>(string controller)</code>
+<div class="details">
+<p>设置默认控制器</p></div>
+
+<hr>
+
+<a href="../../../source/controller/dispatcher/abstract.php.html#line158" class="location">Controller\Dispatcher\Abstract.php at line 158</a>
+
+<h3 id="getDefaultController()">getDefaultController</h3>
+<code class="signature">public  void <strong>getDefaultController</strong>()</code>
+<div class="details">
+<p>返回默认控制器</p></div>
+
+<hr>
+
+<a href="../../../source/controller/dispatcher/abstract.php.html#line169" class="location">Controller\Dispatcher\Abstract.php at line 169</a>
+
+<h3 id="setDefaultAction()">setDefaultAction</h3>
+<code class="signature">public  void <strong>setDefaultAction</strong>(string action)</code>
+<div class="details">
+<p>设置默认动作</p></div>
+
+<hr>
+
+<a href="../../../source/controller/dispatcher/abstract.php.html#line179" class="location">Controller\Dispatcher\Abstract.php at line 179</a>
+
+<h3 id="getDefaultAction()">getDefaultAction</h3>
+<code class="signature">public  void <strong>getDefaultAction</strong>()</code>
+<div class="details">
+<p>返回默认动作</p></div>
+
+<hr>
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../suco/controller/dispatcher/package-summary.html">Namespace</a></li>
+<li class="active">Class</li>
+<li><a href="../../../suco/controller/dispatcher/package-tree.html">Tree</a></li>
+<li><a href="../../../overview-files.html">Files</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../todo-list.html">Todo</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../../../index.html" target="_top">Frames</a>
+<a href="../../../suco\controller\dispatcher\suco_controller_dispatcher_abstract.html" target="_top">No frames</a>
+</div>
+<div class="small_links">
+Summary: <a href="#summary_field">Field</a> | <a href="#summary_method">Method</a> | <a href="#summary_constr">Constr</a>
+Detail: <a href="#detail_field">Field</a> | <a href="#detail_method">Method</a> | <a href="#summary_constr">Constr</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

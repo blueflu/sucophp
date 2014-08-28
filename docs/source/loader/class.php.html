@@ -1,0 +1,214 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:36 +0000">
+
+<link rel="stylesheet" type="text/css" href="../stylesheet.css">
+<link rel="start" href="../overview-summary.html">
+
+<title>Loader\Class.php (SucoPHP API Doc)</title>
+
+</head>
+<body id="file" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\loader\class.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<h1>Loader\Class.php</h1>
+<hr>
+
+<a name="line1"></a><pre><?php
+<a name="line2"></a>/**
+<a name="line3"></a> * Suco_Loader_Class 类装载器
+<a name="line4"></a> *
+<a name="line5"></a> * @version		3.0 2009/09/01
+<a name="line6"></a> * @author		Eric Yu (blueflu@live.cn)
+<a name="line7"></a> * @copyright	Copyright (c) 2009, Suconet, Inc.
+<a name="line8"></a> * @package		Loader
+<a name="line9"></a> * @license		http://www.suconet.com/license
+<a name="line10"></a> * -----------------------------------------------------------
+<a name="line11"></a> */
+<a name="line12"></a>
+<a name="line13"></a>require_once 'Suco/Loader/File.php';
+<a name="line14"></a>
+<a name="line15"></a>class Suco_Loader_Class extends Suco_Loader_File
+<a name="line16"></a>{
+<a name="line17"></a>	/**
+<a name="line18"></a>	 * 命名空间
+<a name="line19"></a>	 * @var string
+<a name="line20"></a>	 */
+<a name="line21"></a>	protected static $_namespaces = array();
+<a name="line22"></a>
+<a name="line23"></a>	/**
+<a name="line24"></a>	 * 已装载项目
+<a name="line25"></a>	 * @var array
+<a name="line26"></a>	 */
+<a name="line27"></a>	protected static $_loaded = array();
+<a name="line28"></a>
+<a name="line29"></a>	/**
+<a name="line30"></a>	 * 类后缀
+<a name="line31"></a>	 * @var string
+<a name="line32"></a>	 */
+<a name="line33"></a>	protected static $_suffix = '.php';
+<a name="line34"></a>
+<a name="line35"></a>	/**
+<a name="line36"></a>	 * 注册命名空间
+<a name="line37"></a>	 *
+<a name="line38"></a>	 * @param string $namespace
+<a name="line39"></a>	 * @param string $path
+<a name="line40"></a>	 * @return void
+<a name="line41"></a>	 */
+<a name="line42"></a>	public static function registerNamespace($namespace, $path = null)
+<a name="line43"></a>	{
+<a name="line44"></a>		self::$_namespaces[$namespace] = $path;
+<a name="line45"></a>	}
+<a name="line46"></a>
+<a name="line47"></a>	/**
+<a name="line48"></a>	 * 注销命名空间
+<a name="line49"></a>	 *
+<a name="line50"></a>	 * @param string $namespace
+<a name="line51"></a>	 * @return void
+<a name="line52"></a>	 */
+<a name="line53"></a>	public static function unregisterNamespace($namespace)
+<a name="line54"></a>	{
+<a name="line55"></a>		unset(self::$_namespaces[$namespace]);
+<a name="line56"></a>	}
+<a name="line57"></a>
+<a name="line58"></a>	/**
+<a name="line59"></a>	 * 返回命名空间
+<a name="line60"></a>	 *
+<a name="line61"></a>	 * @param string $namespace
+<a name="line62"></a>	 * @return string
+<a name="line63"></a>	 */
+<a name="line64"></a>	public static function getNamespace($classname)
+<a name="line65"></a>	{
+<a name="line66"></a>		foreach (self::$_namespaces as $namespace => $path) {
+<a name="line67"></a>			if ($namespace == substr($classname, 0, strlen($namespace))) {
+<a name="line68"></a>				return $namespace;
+<a name="line69"></a>			}
+<a name="line70"></a>		}
+<a name="line71"></a>	}
+<a name="line72"></a>
+<a name="line73"></a>	/**
+<a name="line74"></a>	 * 检查类是否存在
+<a name="line75"></a>	 *
+<a name="line76"></a>	 * @param string $classname
+<a name="line77"></a>	 * @return bool
+<a name="line78"></a>	 */
+<a name="line79"></a>	public static function exists($classname)
+<a name="line80"></a>	{
+<a name="line81"></a>		if (isset(self::$_loaded[$classname])) return true;
+<a name="line82"></a>
+<a name="line83"></a>		$file = $classname;
+<a name="line84"></a>		if ($namespace = self::getNamespace($classname)) {
+<a name="line85"></a>			$file = str_replace($namespace, self::$_namespaces[$namespace], $file);
+<a name="line86"></a>		}
+<a name="line87"></a>		$file = str_replace('_', DIRECTORY_SEPARATOR, $file) . self::getSuffix();
+<a name="line88"></a>		if (!parent::exists($file)) return false;
+<a name="line89"></a>
+<a name="line90"></a>		return true;
+<a name="line91"></a>	}
+<a name="line92"></a>
+<a name="line93"></a>	/**
+<a name="line94"></a>	 * 载入类文件
+<a name="line95"></a>	 *
+<a name="line96"></a>	 * @param string $classname
+<a name="line97"></a>	 * @return void
+<a name="line98"></a>	 */
+<a name="line99"></a>	public static function loadClass($classname)
+<a name="line100"></a>	{
+<a name="line101"></a>		if (!isset(self::$_loaded[$classname])) {
+<a name="line102"></a>			$file = $classname;
+<a name="line103"></a>			if ($namespace = self::getNamespace($classname)) {
+<a name="line104"></a>				$file = str_replace($namespace, self::$_namespaces[$namespace], $file);
+<a name="line105"></a>			}
+<a name="line106"></a>
+<a name="line107"></a>			$file = str_replace('_', DIRECTORY_SEPARATOR, $file) . self::getSuffix();
+<a name="line108"></a>
+<a name="line109"></a>			try {
+<a name="line110"></a>				parent::loadFile($file);
+<a name="line111"></a>			} catch (Suco_Loader_Exception $e) {
+<a name="line112"></a>				throw new Suco_Loader_Exception("找不到 {$classname} 类文件 {$file}");
+<a name="line113"></a>			}
+<a name="line114"></a>
+<a name="line115"></a>			if (!class_exists($classname)) {
+<a name="line116"></a>				require_once 'Suco/Loader/Exception.php';
+<a name="line117"></a>				throw new Suco_Loader_Exception("文件 {$file}, 不是{$classname}类文件");
+<a name="line118"></a>			}
+<a name="line119"></a>			self::$_loaded[$classname] = true;
+<a name="line120"></a>		}
+<a name="line121"></a>	}
+<a name="line122"></a>
+<a name="line123"></a>	/**
+<a name="line124"></a>	 * 返回已载入的类文件
+<a name="line125"></a>	 *
+<a name="line126"></a>	 * @return array
+<a name="line127"></a>	 */
+<a name="line128"></a>	public static function getLoaded()
+<a name="line129"></a>	{
+<a name="line130"></a>		return array_keys(self::$_loaded);
+<a name="line131"></a>	}
+<a name="line132"></a>
+<a name="line133"></a>	/**
+<a name="line134"></a>	 * 设置类后缀
+<a name="line135"></a>	 *
+<a name="line136"></a>	 * @param string $suffix
+<a name="line137"></a>	 * @return void
+<a name="line138"></a>	 */
+<a name="line139"></a>	public static function setSuffix($suffix)
+<a name="line140"></a>	{
+<a name="line141"></a>		self::$_suffix = $suffix;
+<a name="line142"></a>	}
+<a name="line143"></a>
+<a name="line144"></a>	/**
+<a name="line145"></a>	 * 返回类后缀
+<a name="line146"></a>	 *
+<a name="line147"></a>	 * @return string
+<a name="line148"></a>	 */
+<a name="line149"></a>	public static function getSuffix()
+<a name="line150"></a>	{
+<a name="line151"></a>		return self::$_suffix;
+<a name="line152"></a>	}
+<a name="line153"></a>}
+<a name="line154"></a>?></pre>
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\loader\class.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

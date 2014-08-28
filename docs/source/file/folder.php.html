@@ -1,0 +1,251 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:36 +0000">
+
+<link rel="stylesheet" type="text/css" href="../stylesheet.css">
+<link rel="start" href="../overview-summary.html">
+
+<title>File\Folder.php (SucoPHP API Doc)</title>
+
+</head>
+<body id="file" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\file\folder.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<h1>File\Folder.php</h1>
+<hr>
+
+<a name="line1"></a><pre><?php
+<a name="line2"></a>/**
+<a name="line3"></a> * Suco_File_Folder 类, 目录操作封装
+<a name="line4"></a> *
+<a name="line5"></a> * @version		3.0 2009/09/01
+<a name="line6"></a> * @author		Eric Yu (blueflu@live.cn)
+<a name="line7"></a> * @copyright	Copyright (c) 2009, Suconet, Inc.
+<a name="line8"></a> * @package		File
+<a name="line9"></a> * @license		http://www.suconet.com/license
+<a name="line10"></a> * -----------------------------------------------------------
+<a name="line11"></a> */
+<a name="line12"></a>
+<a name="line13"></a>class Suco_File_Folder extends Suco_File
+<a name="line14"></a>{
+<a name="line15"></a>	/**
+<a name="line16"></a>	 * 读取目录
+<a name="line17"></a>	 *
+<a name="line18"></a>	 * @param  string	$dir	目录路径
+<a name="line19"></a>	 * @param  string	$mode	读取模式	'file' 只读取目录中的文件, 'dir' 只读取目录中的子目录
+<a name="line20"></a>	 * @return  array
+<a name="line21"></a>	 */
+<a name="line22"></a>	public static function read($dir, $mode = null)
+<a name="line23"></a>	{
+<a name="line24"></a>		$folders = array();
+<a name="line25"></a>		$dir = realpath($dir) . '\\';
+<a name="line26"></a>		if (is_dir($dir) && $dh = opendir($dir)) {
+<a name="line27"></a>			while (($file = readdir($dh)) !== false) {
+<a name="line28"></a>				if ($file == '.' || $file == '..') { continue; }
+<a name="line29"></a>				if ($mode == 'file' && filetype($dir . $file) != 'file') {
+<a name="line30"></a>					continue;
+<a name="line31"></a>				} elseif ($mode == 'dir' && filetype($dir . $file) != 'dir') {
+<a name="line32"></a>					continue;
+<a name="line33"></a>				}
+<a name="line34"></a>
+<a name="line35"></a>				$folders[] = array(
+<a name="line36"></a>					'name' => $file,
+<a name="line37"></a>					'path' => $dir,
+<a name="line38"></a>					'type' => filetype($dir . '\\' . $file),
+<a name="line39"></a>					'readable' => is_readable($dir . '\\' . $file),
+<a name="line40"></a>					'size' => filesize($dir . '\\' . $file),
+<a name="line41"></a>					'time' => filemtime($dir . '\\' . $file),
+<a name="line42"></a>				);
+<a name="line43"></a>			}
+<a name="line44"></a>			closedir($dh);
+<a name="line45"></a>			return $folders;
+<a name="line46"></a>		}
+<a name="line47"></a>		return false;
+<a name="line48"></a>	}
+<a name="line49"></a>
+<a name="line50"></a>	/**
+<a name="line51"></a>	 * 复制目录
+<a name="line52"></a>	 *
+<a name="line53"></a>	 * @param  string	$source	源路径
+<a name="line54"></a>	 * @param  string	$dest	目标路径
+<a name="line55"></a>	 * @return  null
+<a name="line56"></a>	 */
+<a name="line57"></a>	public static function copy($source, $dest)
+<a name="line58"></a>	{
+<a name="line59"></a>		static $files;
+<a name="line60"></a>		$source = realpath($source . '\\');
+<a name="line61"></a>		$dest = $dest . '\\';
+<a name="line62"></a>
+<a name="line63"></a>		if (!is_dir($dest)) {
+<a name="line64"></a>			self::mk($dest);
+<a name="line65"></a>		}
+<a name="line66"></a>
+<a name="line67"></a>		if (is_dir($source)) {
+<a name="line68"></a>			$dirs = self::read($source);
+<a name="line69"></a>
+<a name="line70"></a>			foreach ((array)$dirs as $var) {
+<a name="line71"></a>				switch ($var['type']) {
+<a name="line72"></a>					case 'dir':
+<a name="line73"></a>						$var['name'] .= '\\';
+<a name="line74"></a>						self::copy($var['path'] . $var['name'] . '\\', $dest . $var['name']);
+<a name="line75"></a>						continue;
+<a name="line76"></a>					case 'file':
+<a name="line77"></a>						parent::copy($var['path'] . $var['name'], $dest . $var['name']);
+<a name="line78"></a>						continue;
+<a name="line79"></a>				}
+<a name="line80"></a>			}
+<a name="line81"></a>			return true;
+<a name="line82"></a>		}
+<a name="line83"></a>	}
+<a name="line84"></a>
+<a name="line85"></a>	/**
+<a name="line86"></a>	 * 移动目录
+<a name="line87"></a>	 *
+<a name="line88"></a>	 * @param  string	$source	源路径
+<a name="line89"></a>	 * @param  string	$dest	目标路径
+<a name="line90"></a>	 * @return  null
+<a name="line91"></a>	 */
+<a name="line92"></a>	public static function move($source, $dest)
+<a name="line93"></a>	{
+<a name="line94"></a>		self::copy($source, $dest);
+<a name="line95"></a>		self::rm($source);
+<a name="line96"></a>	}
+<a name="line97"></a>
+<a name="line98"></a>	/**
+<a name="line99"></a>	 * rm 方法别名
+<a name="line100"></a>	 */
+<a name="line101"></a>	public static function delete($dir)
+<a name="line102"></a>	{
+<a name="line103"></a>		self::rm($dir);
+<a name="line104"></a>	}
+<a name="line105"></a>
+<a name="line106"></a>	/**
+<a name="line107"></a>	 * mk 方法别名
+<a name="line108"></a>	 */
+<a name="line109"></a>	public static function create($dir, $mode = 0777)
+<a name="line110"></a>	{
+<a name="line111"></a>		self::mk($dir, $mode);
+<a name="line112"></a>	}
+<a name="line113"></a>
+<a name="line114"></a>	/**
+<a name="line115"></a>	 * 清空目录
+<a name="line116"></a>	 *
+<a name="line117"></a>	 * @param  string	$dir	路径
+<a name="line118"></a>	 * @return  null
+<a name="line119"></a>	 */
+<a name="line120"></a>	public static function clear($dir)
+<a name="line121"></a>	{
+<a name="line122"></a>		self::rm($dir);
+<a name="line123"></a>		self::mk($dir, 0777);
+<a name="line124"></a>	}
+<a name="line125"></a>
+<a name="line126"></a>	/**
+<a name="line127"></a>	 * 创建目录
+<a name="line128"></a>	 *
+<a name="line129"></a>	 * @param  string	$dir	目录路径
+<a name="line130"></a>	 * @param  int	$mode		权限
+<a name="line131"></a>	 * @return  bool
+<a name="line132"></a>	 */
+<a name="line133"></a>	public static  function mk($folder, $mode = 0777)
+<a name="line134"></a>	{
+<a name="line135"></a>	    $reval = false;
+<a name="line136"></a>	    if (!is_file($folder)) {
+<a name="line137"></a>	        @umask(0);
+<a name="line138"></a>	        preg_match_all('/([^\/]*)\/?/i', $folder, $atmp);
+<a name="line139"></a>	        $base = ($atmp[0][0] == '/') ? '/' : '';
+<a name="line140"></a>	        foreach ($atmp[1] AS $val) {
+<a name="line141"></a>	            if ('' != $val) {
+<a name="line142"></a>	                $base .= $val;
+<a name="line143"></a>	                if ('..' == $val || '.' == $val) {
+<a name="line144"></a>	                    $base .= '/';
+<a name="line145"></a>	                    continue;
+<a name="line146"></a>	                }
+<a name="line147"></a>	            }
+<a name="line148"></a>	            else {
+<a name="line149"></a>	                continue;
+<a name="line150"></a>	            }
+<a name="line151"></a>	            $base .= '/';
+<a name="line152"></a>	            if (!is_file($base)) {
+<a name="line153"></a>	                if (@mkdir(rtrim($base, '/'), $mode)) {
+<a name="line154"></a>	                    @chmod($base, $mode);
+<a name="line155"></a>	                    $reval = true;
+<a name="line156"></a>	                }
+<a name="line157"></a>	            }
+<a name="line158"></a>	        }
+<a name="line159"></a>	    }
+<a name="line160"></a>	    else {
+<a name="line161"></a>	        $reval = is_dir($folder);
+<a name="line162"></a>	    }
+<a name="line163"></a>	    clearstatcache();
+<a name="line164"></a>	    return $reval;
+<a name="line165"></a>	}
+<a name="line166"></a>
+<a name="line167"></a>	/**
+<a name="line168"></a>	 * 删除目录
+<a name="line169"></a>	 *
+<a name="line170"></a>	 * @param  string	$dir	目录路径
+<a name="line171"></a>	 * @return  null
+<a name="line172"></a>	 */
+<a name="line173"></a>	public static function rm($dir)
+<a name="line174"></a>	{
+<a name="line175"></a>		if (is_dir($dir)) {
+<a name="line176"></a>			$dirs = self::read($dir);
+<a name="line177"></a>			foreach ((array)$dirs as $val) {
+<a name="line178"></a>				switch ($val['type']) {
+<a name="line179"></a>					case 'dir':
+<a name="line180"></a>						self::rm($val['path'] . '\\' . $val['name'] . '\\');
+<a name="line181"></a>						continue;
+<a name="line182"></a>					case 'file':
+<a name="line183"></a>						parent::delete($val['path'] . '\\' . $val['name']);
+<a name="line184"></a>						continue;
+<a name="line185"></a>				}
+<a name="line186"></a>			}
+<a name="line187"></a>			rmdir($dir);
+<a name="line188"></a>			return true;
+<a name="line189"></a>		}
+<a name="line190"></a>	}
+<a name="line191"></a>}</pre>
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\file\folder.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

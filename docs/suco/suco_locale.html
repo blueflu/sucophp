@@ -1,0 +1,262 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:34 +0000">
+
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css">
+<link rel="start" href="../../overview-summary.html">
+
+<title>Suco_Locale (SucoPHP API Doc)</title>
+
+</head>
+<body id="definition" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="../../suco//package-summary.html">Namespace</a></li>
+<li class="active">Class</li>
+<li><a href="../../suco//package-tree.html">Tree</a></li>
+<li><a href="../../overview-files.html">Files</a></li>
+<li><a href="../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../todo-list.html">Todo</a></li>
+<li><a href="../../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../../index.html" target="_top">Frames</a>
+<a href="../../suco\\suco_locale.html" target="_top">No frames</a>
+</div>
+<div class="small_links">
+Summary: <a href="#summary_field">Field</a> | <a href="#summary_method">Method</a> | <a href="#summary_constr">Constr</a>
+Detail: <a href="#detail_field">Field</a> | <a href="#detail_method">Method</a> | <a href="#summary_constr">Constr</a>
+</div>
+<hr>
+
+<div class="qualifiedName">Suco\\Suco_Locale</div>
+<a href="../../source/locale.php.html#line14" class="location">Locale.php at line 14</a>
+
+<h1>Class Suco_Locale</h1>
+
+<pre class="tree"><strong>Suco_Locale</strong><br /></pre>
+
+<hr>
+
+<p class="signature">public  class <strong>Suco_Locale</strong></p>
+
+<div class="comment" id="overview_description"><p>Suco_Locale 本地化封装 [未完善]
+此类主要用于本地化的语言，数字，货币等信息格式的处理</p></div>
+
+<dl>
+<dt>Version:</dt>
+<dd>3.0 2009/09/01</dd>
+<dt>Author:</dt>
+<dd>Eric Yu (blueflu@live.cn)</dd>
+<dt>Copyright:</dt>
+<dd>Copyright (c) 2009, Suconet, Inc.</dd>
+<dt>License:</dt>
+<dd>http://www.suconet.com/license -----------------------------------------------------------</dd>
+</dl>
+<hr>
+
+<table id="summary_method">
+<tr><th colspan="2">Method Summary</th></tr>
+<tr>
+<td class="type">static  object</td>
+<td class="description"><p class="name"><a href="#instance()">instance</a>()</p><p class="description">单件实例</p></td>
+</tr>
+<tr>
+<td class="type">static  void</td>
+<td class="description"><p class="name"><a href="#setup()">setup</a>()</p><p class="description">装载语言包</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#parse()">parse</a>(string file)</p><p class="description">解析语言包</p></td>
+</tr>
+<tr>
+<td class="type"> object</td>
+<td class="description"><p class="name"><a href="#setLanguage()">setLanguage</a>(string language)</p><p class="description">设置当前语言</p></td>
+</tr>
+<tr>
+<td class="type"> string</td>
+<td class="description"><p class="name"><a href="#getLanguage()">getLanguage</a>(string language)</p><p class="description">返回当前语言</p></td>
+</tr>
+<tr>
+<td class="type"> object</td>
+<td class="description"><p class="name"><a href="#setPath()">setPath</a>(string path)</p><p class="description">设置语言包目录</p></td>
+</tr>
+<tr>
+<td class="type"> string</td>
+<td class="description"><p class="name"><a href="#getPath()">getPath</a>()</p><p class="description">返回语言包目录</p></td>
+</tr>
+<tr>
+<td class="type"> array</td>
+<td class="description"><p class="name"><a href="#getLoaded()">getLoaded</a>()</p><p class="description">返回已载入的语言包</p></td>
+</tr>
+<tr>
+<td class="type"> string</td>
+<td class="description"><p class="name"><a href="#addPackage()">addPackage</a>(mixed package)</p><p class="description">添加语言包</p></td>
+</tr>
+<tr>
+<td class="type"> string</td>
+<td class="description"><p class="name"><a href="#setPackages()">setPackages</a>(mixed packages)</p><p class="description">设置语言包集合</p></td>
+</tr>
+<tr>
+<td class="type"> string</td>
+<td class="description"><p class="name"><a href="#getPackages()">getPackages</a>()</p><p class="description">返回语言包集合</p></td>
+</tr>
+<tr>
+<td class="type"> string</td>
+<td class="description"><p class="name"><a href="#tranlate()">tranlate</a>(string string)</p><p class="description">根据语言包设置翻译字符</p></td>
+</tr>
+</table>
+
+<h2 id="detail_method">Method Detail</h2>
+<a href="../../source/locale.php.html#line27" class="location">Locale.php at line 27</a>
+
+<h3 id="instance()">instance</h3>
+<code class="signature">public static  object <strong>instance</strong>()</code>
+<div class="details">
+<p>单件实例</p></div>
+
+<hr>
+
+<a href="../../source/locale.php.html#line41" class="location">Locale.php at line 41</a>
+
+<h3 id="setup()">setup</h3>
+<code class="signature">public static  void <strong>setup</strong>()</code>
+<div class="details">
+<p>装载语言包</p></div>
+
+<hr>
+
+<a href="../../source/locale.php.html#line57" class="location">Locale.php at line 57</a>
+
+<h3 id="parse()">parse</h3>
+<code class="signature">public  void <strong>parse</strong>(string file)</code>
+<div class="details">
+<p>解析语言包</p><dl>
+<dt>Parameters:</dt>
+<dd>file - 语言包文件地址</dd>
+</dl>
+</div>
+
+<hr>
+
+<a href="../../source/locale.php.html#line89" class="location">Locale.php at line 89</a>
+
+<h3 id="setLanguage()">setLanguage</h3>
+<code class="signature">public  object <strong>setLanguage</strong>(string language)</code>
+<div class="details">
+<p>设置当前语言</p></div>
+
+<hr>
+
+<a href="../../source/locale.php.html#line101" class="location">Locale.php at line 101</a>
+
+<h3 id="getLanguage()">getLanguage</h3>
+<code class="signature">public  string <strong>getLanguage</strong>(string language)</code>
+<div class="details">
+<p>返回当前语言</p></div>
+
+<hr>
+
+<a href="../../source/locale.php.html#line112" class="location">Locale.php at line 112</a>
+
+<h3 id="setPath()">setPath</h3>
+<code class="signature">public  object <strong>setPath</strong>(string path)</code>
+<div class="details">
+<p>设置语言包目录</p></div>
+
+<hr>
+
+<a href="../../source/locale.php.html#line123" class="location">Locale.php at line 123</a>
+
+<h3 id="getPath()">getPath</h3>
+<code class="signature">public  string <strong>getPath</strong>()</code>
+<div class="details">
+<p>返回语言包目录</p></div>
+
+<hr>
+
+<a href="../../source/locale.php.html#line133" class="location">Locale.php at line 133</a>
+
+<h3 id="getLoaded()">getLoaded</h3>
+<code class="signature">public  array <strong>getLoaded</strong>()</code>
+<div class="details">
+<p>返回已载入的语言包</p></div>
+
+<hr>
+
+<a href="../../source/locale.php.html#line143" class="location">Locale.php at line 143</a>
+
+<h3 id="addPackage()">addPackage</h3>
+<code class="signature">public  string <strong>addPackage</strong>(mixed package)</code>
+<div class="details">
+<p>添加语言包</p></div>
+
+<hr>
+
+<a href="../../source/locale.php.html#line158" class="location">Locale.php at line 158</a>
+
+<h3 id="setPackages()">setPackages</h3>
+<code class="signature">public  string <strong>setPackages</strong>(mixed packages)</code>
+<div class="details">
+<p>设置语言包集合</p></div>
+
+<hr>
+
+<a href="../../source/locale.php.html#line168" class="location">Locale.php at line 168</a>
+
+<h3 id="getPackages()">getPackages</h3>
+<code class="signature">public  string <strong>getPackages</strong>()</code>
+<div class="details">
+<p>返回语言包集合</p></div>
+
+<hr>
+
+<a href="../../source/locale.php.html#line179" class="location">Locale.php at line 179</a>
+
+<h3 id="tranlate()">tranlate</h3>
+<code class="signature">public  string <strong>tranlate</strong>(string string)</code>
+<div class="details">
+<p>根据语言包设置翻译字符</p></div>
+
+<hr>
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="../../suco//package-summary.html">Namespace</a></li>
+<li class="active">Class</li>
+<li><a href="../../suco//package-tree.html">Tree</a></li>
+<li><a href="../../overview-files.html">Files</a></li>
+<li><a href="../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../todo-list.html">Todo</a></li>
+<li><a href="../../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../../index.html" target="_top">Frames</a>
+<a href="../../suco\\suco_locale.html" target="_top">No frames</a>
+</div>
+<div class="small_links">
+Summary: <a href="#summary_field">Field</a> | <a href="#summary_method">Method</a> | <a href="#summary_constr">Constr</a>
+Detail: <a href="#detail_field">Field</a> | <a href="#detail_method">Method</a> | <a href="#summary_constr">Constr</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

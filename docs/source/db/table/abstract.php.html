@@ -1,0 +1,1062 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:36 +0000">
+
+<link rel="stylesheet" type="text/css" href="../stylesheet.css">
+<link rel="start" href="../overview-summary.html">
+
+<title>Db\Table\Abstract.php (SucoPHP API Doc)</title>
+
+</head>
+<body id="file" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\db\table\abstract.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<h1>Db\Table\Abstract.php</h1>
+<hr>
+
+<a name="line1"></a><pre><?php
+<a name="line2"></a>/**
+<a name="line3"></a> * Suco_Db_Table_Abstract 表业务抽象
+<a name="line4"></a> *
+<a name="line5"></a> * @version		3.0 2009/09/01
+<a name="line6"></a> * @author		Eric Yu (blueflu@live.cn)
+<a name="line7"></a> * @copyright	Copyright (c) 2008, Suconet, Inc.
+<a name="line8"></a> * @license		http://www.suconet.com/license
+<a name="line9"></a> * @package		Db
+<a name="line10"></a> * -----------------------------------------------------------
+<a name="line11"></a> */
+<a name="line12"></a>
+<a name="line13"></a>abstract class Suco_Db_Table_Abstract
+<a name="line14"></a>{
+<a name="line15"></a>	//protected $_name;
+<a name="line16"></a>	//protected $_primary;
+<a name="line17"></a>	/**
+<a name="line18"></a>	 * 表前缀
+<a name="line19"></a>	 * @var string
+<a name="line20"></a>	 */
+<a name="line21"></a>	protected $_prefix;
+<a name="line22"></a>
+<a name="line23"></a>	/**
+<a name="line24"></a>	 * schema
+<a name="line25"></a>	 * @var string
+<a name="line26"></a>	 */
+<a name="line27"></a>	protected $_schema;
+<a name="line28"></a>
+<a name="line29"></a>	/**
+<a name="line30"></a>	 * 自增主键
+<a name="line31"></a>	 * @var string
+<a name="line32"></a>	 */
+<a name="line33"></a>	protected $_identity;
+<a name="line34"></a>
+<a name="line35"></a>	/**
+<a name="line36"></a>	 * 表字段
+<a name="line37"></a>	 * @var array
+<a name="line38"></a>	 */
+<a name="line39"></a>	protected $_columns;
+<a name="line40"></a>
+<a name="line41"></a>	/**
+<a name="line42"></a>	 * 适配器
+<a name="line43"></a>	 * @var array
+<a name="line44"></a>	 */
+<a name="line45"></a>	protected $_adapter;
+<a name="line46"></a>
+<a name="line47"></a>	/**
+<a name="line48"></a>	 * 触发器
+<a name="line49"></a>	 * @var array
+<a name="line50"></a>	 */
+<a name="line51"></a>	protected $_triggers;
+<a name="line52"></a>
+<a name="line53"></a>	/**
+<a name="line54"></a>	 * 表META信息
+<a name="line55"></a>	 * @var array
+<a name="line56"></a>	 */
+<a name="line57"></a>	protected $_metadata;
+<a name="line58"></a>
+<a name="line59"></a>	/**
+<a name="line60"></a>	 * 指定 row 类
+<a name="line61"></a>	 * @var string
+<a name="line62"></a>	 */
+<a name="line63"></a>	protected $_rowClass;
+<a name="line64"></a>
+<a name="line65"></a>	/**
+<a name="line66"></a>	 * 指定 rowset 类
+<a name="line67"></a>	 * @var string
+<a name="line68"></a>	 */
+<a name="line69"></a>	protected $_rowsetClass;
+<a name="line70"></a>
+<a name="line71"></a>	/**
+<a name="line72"></a>	 * 表默认值
+<a name="line73"></a>	 * @var array
+<a name="line74"></a>	 */
+<a name="line75"></a>	protected $_defaultValues;
+<a name="line76"></a>
+<a name="line77"></a>	/**
+<a name="line78"></a>	 * 禁止修改的列
+<a name="line79"></a>	 * @var array
+<a name="line80"></a>	 */
+<a name="line81"></a>	protected $_noModifyColumns;
+<a name="line82"></a>
+<a name="line83"></a>	/**
+<a name="line84"></a>	 * 刷新缓存标识
+<a name="line85"></a>	 * @var bool
+<a name="line86"></a>	 */
+<a name="line87"></a>	protected $_refreshCache = false;
+<a name="line88"></a>
+<a name="line89"></a>	/**
+<a name="line90"></a>	 * Array2String 分割符
+<a name="line91"></a>	 * @var string
+<a name="line92"></a>	 */
+<a name="line93"></a>	protected $_arraySeparator = ',';
+<a name="line94"></a>
+<a name="line95"></a>
+<a name="line96"></a>	/**
+<a name="line97"></a>	 * 关系映射
+<a name="line98"></a>	 * @var array
+<a name="line99"></a>	 */
+<a name="line100"></a>	protected $_referenceMap = array();
+<a name="line101"></a>
+<a name="line102"></a>	/**
+<a name="line103"></a>	 * 默认数据库适配器
+<a name="line104"></a>	 * @var object
+<a name="line105"></a>	 */
+<a name="line106"></a>	protected static $_defaultAdapter;
+<a name="line107"></a>
+<a name="line108"></a>	/**
+<a name="line109"></a>	 * 构造方法
+<a name="line110"></a>	 *
+<a name="line111"></a>	 * @param string $tbName 表名
+<a name="line112"></a>	 * @param array $options 设置选项
+<a name="line113"></a>	 */
+<a name="line114"></a>	public function __construct($tbName = null, $options = array())
+<a name="line115"></a>	{
+<a name="line116"></a>		if (!empty($options) && !is_array($options)) {
+<a name="line117"></a>			$options = array('adapter' => $options);
+<a name="line118"></a>		}
+<a name="line119"></a>
+<a name="line120"></a>		if ($tbName) {
+<a name="line121"></a>			$this->_name = $tbName;
+<a name="line122"></a>		}
+<a name="line123"></a>
+<a name="line124"></a>		if (!$this->_name) {
+<a name="line125"></a>			//require_once 'Suco/Db/Table/Exception.php';
+<a name="line126"></a>			//throw new Suco_Db_Table_Exception(get_class($this).'对象没有绑定数据表');
+<a name="line127"></a>		}
+<a name="line128"></a>		$this->setOptions($options);
+<a name="line129"></a>		$this->init();
+<a name="line130"></a>	}
+<a name="line131"></a>
+<a name="line132"></a>	/**
+<a name="line133"></a>	 * 初始化方法
+<a name="line134"></a>	 */
+<a name="line135"></a>	public function init() {}
+<a name="line136"></a>
+<a name="line137"></a>	/**
+<a name="line138"></a>	 * 类配置方法
+<a name="line139"></a>	 * @example
+<a name="line140"></a>	 * $tb = new Suco_Db_Table('tbname', array(
+<a name="line141"></a>	 * 	'columns' => array('id', 'name')
+<a name="line142"></a>	 * 	'identity' => 'id'
+<a name="line143"></a>	 * 	......
+<a name="line144"></a>	 * ));
+<a name="line145"></a>	 */
+<a name="line146"></a>	public function setOptions($options)
+<a name="line147"></a>	{
+<a name="line148"></a>		foreach ($options as $method => $param) {
+<a name="line149"></a>			$method = 'set' . ucfirst($method);
+<a name="line150"></a>			if (method_exists($this, $method)) {
+<a name="line151"></a>				$this->$method($param);
+<a name="line152"></a>			}
+<a name="line153"></a>		}
+<a name="line154"></a>		return $this;
+<a name="line155"></a>	}
+<a name="line156"></a>
+<a name="line157"></a>	/**
+<a name="line158"></a>	 * 设置映射关系
+<a name="line159"></a>	 *
+<a name="line160"></a>	 * @param array $map
+<a name="line161"></a>	 *
+<a name="line162"></a>	 * $map 数组结构
+<a name="line163"></a>	 * @type 链接类型
+<a name="line164"></a>	 * 	- hasone 一对一
+<a name="line165"></a>	 *  - hasmany 一对多
+<a name="line166"></a>	 * @foreign 链接外键
+<a name="line167"></a>	 * @primary 链接主键
+<a name="line168"></a>	 * @columns 引用列
+<a name="line169"></a>	 */
+<a name="line170"></a>	public function setReferenceMap($map)
+<a name="line171"></a>	{
+<a name="line172"></a>		$this->_referenceMap = $map;
+<a name="line173"></a>	}
+<a name="line174"></a>
+<a name="line175"></a>	/**
+<a name="line176"></a>	 * 设置映射关系
+<a name="line177"></a>	 *
+<a name="line178"></a>	 * @return array
+<a name="line179"></a>	 */
+<a name="line180"></a>	public function getReferenceMap()
+<a name="line181"></a>	{
+<a name="line182"></a>		return $this->_referenceMap;
+<a name="line183"></a>	}
+<a name="line184"></a>
+<a name="line185"></a>	/**
+<a name="line186"></a>	 * 设置禁止修改的列
+<a name="line187"></a>	 *
+<a name="line188"></a>	 * @param array
+<a name="line189"></a>	 */
+<a name="line190"></a>	public function setNoModifyColumns($columns)
+<a name="line191"></a>	{
+<a name="line192"></a>		$this->_noModifyColumns = $columns;
+<a name="line193"></a>	}
+<a name="line194"></a>
+<a name="line195"></a>	/**
+<a name="line196"></a>	 * 返回禁止修改的列
+<a name="line197"></a>	 *
+<a name="line198"></a>	 * @return array
+<a name="line199"></a>	 */
+<a name="line200"></a>	public function getNoModifyColumns()
+<a name="line201"></a>	{
+<a name="line202"></a>		return $this->_noModifyColumns;
+<a name="line203"></a>	}
+<a name="line204"></a>
+<a name="line205"></a>	/**
+<a name="line206"></a>	 * 设置列
+<a name="line207"></a>	 *
+<a name="line208"></a>	 * @return array
+<a name="line209"></a>	 */
+<a name="line210"></a>	public function setColumns($columns)
+<a name="line211"></a>	{
+<a name="line212"></a>		$this->_columns = $columns;
+<a name="line213"></a>	}
+<a name="line214"></a>
+<a name="line215"></a>	/**
+<a name="line216"></a>	 * 返回列
+<a name="line217"></a>	 *
+<a name="line218"></a>	 * @return array
+<a name="line219"></a>	 */
+<a name="line220"></a>	public function getColumns()
+<a name="line221"></a>	{
+<a name="line222"></a>		if (!$this->_columns) {
+<a name="line223"></a>			$this->_setupMetadata();
+<a name="line224"></a>		}
+<a name="line225"></a>		return $this->_columns;
+<a name="line226"></a>	}
+<a name="line227"></a>
+<a name="line228"></a>	/**
+<a name="line229"></a>	 * 设置SCHEMA
+<a name="line230"></a>	 *
+<a name="line231"></a>	 * @return string
+<a name="line232"></a>	 */
+<a name="line233"></a>	public function setSchema($schema)
+<a name="line234"></a>	{
+<a name="line235"></a>		$this->_schema = $schema;
+<a name="line236"></a>		return $this;
+<a name="line237"></a>	}
+<a name="line238"></a>
+<a name="line239"></a>	/**
+<a name="line240"></a>	 * 返回SCHEMA
+<a name="line241"></a>	 *
+<a name="line242"></a>	 * @return string
+<a name="line243"></a>	 */
+<a name="line244"></a>	public function getSchema()
+<a name="line245"></a>	{
+<a name="line246"></a>		return $this->_schema;
+<a name="line247"></a>	}
+<a name="line248"></a>
+<a name="line249"></a>	/**
+<a name="line250"></a>	 * 设置 row 类名
+<a name="line251"></a>	 *
+<a name="line252"></a>	 * @param string $class
+<a name="line253"></a>	 */
+<a name="line254"></a>	public function setRowClass($class)
+<a name="line255"></a>	{
+<a name="line256"></a>		$this->_rowClass = $class;
+<a name="line257"></a>		return $this;
+<a name="line258"></a>	}
+<a name="line259"></a>
+<a name="line260"></a>	/**
+<a name="line261"></a>	 * 返回 row 类名
+<a name="line262"></a>	 *
+<a name="line263"></a>	 * @return string
+<a name="line264"></a>	 */
+<a name="line265"></a>	public function getRowClass()
+<a name="line266"></a>	{
+<a name="line267"></a>		if (!$this->_rowClass) {
+<a name="line268"></a>			require_once 'Suco/Db/Table/Row.php';
+<a name="line269"></a>			$this->setRowClass('Suco_Db_Table_Row');
+<a name="line270"></a>		}
+<a name="line271"></a>		return $this->_rowClass;
+<a name="line272"></a>	}
+<a name="line273"></a>
+<a name="line274"></a>	/**
+<a name="line275"></a>	 * 设置 rowset 类名
+<a name="line276"></a>	 *
+<a name="line277"></a>	 * @param string $class
+<a name="line278"></a>	 * @return string
+<a name="line279"></a>	 */
+<a name="line280"></a>	public function setRowsetClass($class)
+<a name="line281"></a>	{
+<a name="line282"></a>		$this->_rowsetClass = $class;
+<a name="line283"></a>		return $this;
+<a name="line284"></a>	}
+<a name="line285"></a>
+<a name="line286"></a>	/**
+<a name="line287"></a>	 * 返回 rowset 类名
+<a name="line288"></a>	 *
+<a name="line289"></a>	 * @return string
+<a name="line290"></a>	 */
+<a name="line291"></a>	public function getRowsetClass()
+<a name="line292"></a>	{
+<a name="line293"></a>		if (!$this->_rowsetClass) {
+<a name="line294"></a>			require_once 'Suco/Db/Table/Rowset.php';
+<a name="line295"></a>			$this->setRowsetClass('Suco_Db_Table_Rowset');
+<a name="line296"></a>		}
+<a name="line297"></a>		return $this->_rowsetClass;
+<a name="line298"></a>	}
+<a name="line299"></a>
+<a name="line300"></a>	/**
+<a name="line301"></a>	 * 返回表对象名称
+<a name="line302"></a>	 *
+<a name="line303"></a>	 * @return string
+<a name="line304"></a>	 */
+<a name="line305"></a>	public function getName()
+<a name="line306"></a>	{
+<a name="line307"></a>		return $this->_name;
+<a name="line308"></a>	}
+<a name="line309"></a>
+<a name="line310"></a>	/**
+<a name="line311"></a>	 * 设置表对象名称
+<a name="line312"></a>	 *
+<a name="line313"></a>	 * @param string $name
+<a name="line314"></a>	 * @return object;
+<a name="line315"></a>	 */
+<a name="line316"></a>	public function setName($name)
+<a name="line317"></a>	{
+<a name="line318"></a>		$this->_name = $name;
+<a name="line319"></a>		return $this;
+<a name="line320"></a>	}
+<a name="line321"></a>
+<a name="line322"></a>	/**
+<a name="line323"></a>	 * 返回数据表名称
+<a name="line324"></a>	 *
+<a name="line325"></a>	 * @return string
+<a name="line326"></a>	 */
+<a name="line327"></a>	public function getTableName()
+<a name="line328"></a>	{
+<a name="line329"></a>		return ($this->_schema ? $this->_schema . '.' : null) . ($this->_prefix ? $this->_prefix : null) . $this->_name;
+<a name="line330"></a>	}
+<a name="line331"></a>
+<a name="line332"></a>	/**
+<a name="line333"></a>	 * 设置自增字段
+<a name="line334"></a>	 *
+<a name="line335"></a>	 * @param string $field
+<a name="line336"></a>	 */
+<a name="line337"></a>	public function setIdentity($field)
+<a name="line338"></a>	{
+<a name="line339"></a>		$this->_identity = $field;
+<a name="line340"></a>	}
+<a name="line341"></a>
+<a name="line342"></a>	/**
+<a name="line343"></a>	 * 返回自增字段
+<a name="line344"></a>	 *
+<a name="line345"></a>	 * @return string
+<a name="line346"></a>	 */
+<a name="line347"></a>	public function getIdentity()
+<a name="line348"></a>	{
+<a name="line349"></a>		if (!$this->_identity) {
+<a name="line350"></a>			if ($this->_primary) {
+<a name="line351"></a>				$this->setIdentity(is_array($this->_primary) ? $this->_primary[0] : $this->_primary);
+<a name="line352"></a>			} else {
+<a name="line353"></a>				$this->_setupMetadata();
+<a name="line354"></a>			}
+<a name="line355"></a>		}
+<a name="line356"></a>
+<a name="line357"></a>		return $this->_identity;
+<a name="line358"></a>	}
+<a name="line359"></a>
+<a name="line360"></a>	/**
+<a name="line361"></a>	 * 返回最后插入的ID
+<a name="line362"></a>	 *
+<a name="line363"></a>	 * @return int
+<a name="line364"></a>	 */
+<a name="line365"></a>	public function getInsertId()
+<a name="line366"></a>	{
+<a name="line367"></a>		return $this->getAdapter()->getInsertId();
+<a name="line368"></a>	}
+<a name="line369"></a>
+<a name="line370"></a>	/**
+<a name="line371"></a>	 * 设置默认值
+<a name="line372"></a>	 *
+<a name="line373"></a>	 * @param array $values
+<a name="line374"></a>	 * @return object
+<a name="line375"></a>	 */
+<a name="line376"></a>	public function setDefaultValues($values)
+<a name="line377"></a>	{
+<a name="line378"></a>		$this->_defaultValues = $values;
+<a name="line379"></a>		return $this;
+<a name="line380"></a>	}
+<a name="line381"></a>
+<a name="line382"></a>	/**
+<a name="line383"></a>	 * 返回默认值
+<a name="line384"></a>	 *
+<a name="line385"></a>	 * @return array
+<a name="line386"></a>	 */
+<a name="line387"></a>	public function getDefaultValues()
+<a name="line388"></a>	{
+<a name="line389"></a>		if (!$this->_defaultValues) {
+<a name="line390"></a>			$this->_setupMetadata();
+<a name="line391"></a>		}
+<a name="line392"></a>		return $this->_defaultValues;
+<a name="line393"></a>	}
+<a name="line394"></a>
+<a name="line395"></a>	/**
+<a name="line396"></a>	 * 设置Metadata
+<a name="line397"></a>	 *
+<a name="line398"></a>	 * @param array $metadata
+<a name="line399"></a>	 * @return object
+<a name="line400"></a>	 */
+<a name="line401"></a>	public function setMetadata($metadata)
+<a name="line402"></a>	{
+<a name="line403"></a>		$this->_metadata = $metadata;
+<a name="line404"></a>		return $this;
+<a name="line405"></a>	}
+<a name="line406"></a>
+<a name="line407"></a>	/**
+<a name="line408"></a>	 * 返回Metadata
+<a name="line409"></a>	 *
+<a name="line410"></a>	 * @return array
+<a name="line411"></a>	 */
+<a name="line412"></a>	public function getMetadata()
+<a name="line413"></a>	{
+<a name="line414"></a>		if (!$this->_metadata) {
+<a name="line415"></a>			$this->_setupMetadata();
+<a name="line416"></a>		}
+<a name="line417"></a>		return $this->_metadata;
+<a name="line418"></a>	}
+<a name="line419"></a>
+<a name="line420"></a>	/**
+<a name="line421"></a>	 * fetchRows 方法的别名
+<a name="line422"></a>	 *
+<a name="line423"></a>	 * @return object
+<a name="line424"></a>	 */
+<a name="line425"></a>	public function fetchAll($where = null, $order = null, $count = null, $offset = null)
+<a name="line426"></a>	{
+<a name="line427"></a>		return $this->fetchRows($where, $order, $count, $offset);
+<a name="line428"></a>	}
+<a name="line429"></a>
+<a name="line430"></a>	/**
+<a name="line431"></a>	 * 提取记录集
+<a name="line432"></a>	 *
+<a name="line433"></a>	 * @param string $where
+<a name="line434"></a>	 * @param string $order
+<a name="line435"></a>	 * @param int $count
+<a name="line436"></a>	 * @param int $offset
+<a name="line437"></a>	 * @return object
+<a name="line438"></a>	 */
+<a name="line439"></a>	public function fetchRows($where = null, $order = null, $count = null, $offset = null)
+<a name="line440"></a>	{
+<a name="line441"></a>		$select = $this->select();
+<a name="line442"></a>		if ($where) {
+<a name="line443"></a>			$select->where($where);
+<a name="line444"></a>		}
+<a name="line445"></a>		if ($order) {
+<a name="line446"></a>			$select->order($order);
+<a name="line447"></a>		}
+<a name="line448"></a>		if ($count) {
+<a name="line449"></a>			$select->limit($count, $offset);
+<a name="line450"></a>		}
+<a name="line451"></a>		return $select->fetchRows();
+<a name="line452"></a>	}
+<a name="line453"></a>
+<a name="line454"></a>	/**
+<a name="line455"></a>	 * 提取单条记录
+<a name="line456"></a>	 *
+<a name="line457"></a>	 * @param string $where
+<a name="line458"></a>	 * @param string $order
+<a name="line459"></a>	 * @return object
+<a name="line460"></a>	 */
+<a name="line461"></a>	public function fetchRow($where = null, $order = null)
+<a name="line462"></a>	{
+<a name="line463"></a>		//$this->_setupMetadata();
+<a name="line464"></a>		$select = $this->select();
+<a name="line465"></a>		if ($where) {
+<a name="line466"></a>			$select->where($where);
+<a name="line467"></a>		}
+<a name="line468"></a>		if ($order) {
+<a name="line469"></a>			$select->order($order);
+<a name="line470"></a>		}
+<a name="line471"></a>		$select->limit(1);
+<a name="line472"></a>		return $select->fetchRow();
+<a name="line473"></a>	}
+<a name="line474"></a>
+<a name="line475"></a>	/**
+<a name="line476"></a>	 * 提取单列多项记录
+<a name="line477"></a>	 *
+<a name="line478"></a>	 * @param string $col 要提取的列名
+<a name="line479"></a>	 * @param string $where 指定条件
+<a name="line480"></a>	 * @return array
+<a name="line481"></a>	 */
+<a name="line482"></a>	public function fetchCols($col, $where = null)
+<a name="line483"></a>	{
+<a name="line484"></a>		$select = $this->select();
+<a name="line485"></a>		if ($where) {
+<a name="line486"></a>			$select->where($where);
+<a name="line487"></a>		}
+<a name="line488"></a>		return $select->fetchCols($col);
+<a name="line489"></a>	}
+<a name="line490"></a>
+<a name="line491"></a>	/**
+<a name="line492"></a>	 * 提取单列项记录
+<a name="line493"></a>	 *
+<a name="line494"></a>	 * @param string $col 要提取的列名
+<a name="line495"></a>	 * @param string $where 指定条件
+<a name="line496"></a>	 * @return mixed
+<a name="line497"></a>	 */
+<a name="line498"></a>	public function fetchCol($col, $where = null)
+<a name="line499"></a>	{
+<a name="line500"></a>		$select = $this->select();
+<a name="line501"></a>		if ($where) {
+<a name="line502"></a>			$select->where($where);
+<a name="line503"></a>		}
+<a name="line504"></a>		return $select->fetchCol($col);
+<a name="line505"></a>	}
+<a name="line506"></a>
+<a name="line507"></a>	/**
+<a name="line508"></a>	 * 指定键值提取记录集
+<a name="line509"></a>	 *
+<a name="line510"></a>	 * @param string $key 键名 通常是字段名或字段别名
+<a name="line511"></a>	 * @return object
+<a name="line512"></a>	 */
+<a name="line513"></a>	public function fetchOnKey($key)
+<a name="line514"></a>	{
+<a name="line515"></a>		return $this->select()->fetchOnKey($key);
+<a name="line516"></a>	}
+<a name="line517"></a>
+<a name="line518"></a>	/**
+<a name="line519"></a>	 * 模拟创建一条空记录
+<a name="line520"></a>	 * 通常配合 Suco_Db_Table_Row 对象的 save 方法一起使用
+<a name="line521"></a>	 * 如：<code>
+<a name="line522"></a>	 * $tb = $db->table('product');
+<a name="line523"></a>	 * $row = $tb->create()
+<a name="line524"></a>	 * $row->title = 'test';
+<a name="line525"></a>	 * $row->price = 100;
+<a name="line526"></a>	 * $row->save(); //执行save时，会将此记录insert到数据库中，否则不会操作数据库
+<a name="line527"></a>	 * </code>
+<a name="line528"></a>	 *
+<a name="line529"></a>	 * @param string $key 键名 通常是字段名或字段别名
+<a name="line530"></a>	 * @return object
+<a name="line531"></a>	 */
+<a name="line532"></a>	public function create()
+<a name="line533"></a>	{
+<a name="line534"></a>		$rowClass = $this->getRowClass();
+<a name="line535"></a>		return new Suco_Db_Table_Row(null, $this, false);
+<a name="line536"></a>	}
+<a name="line537"></a>
+<a name="line538"></a>	/**
+<a name="line539"></a>	 * 按主键ID查询
+<a name="line540"></a>	 * 根据传入条件返回记录或记录集
+<a name="line541"></a>	 * 如：<code>
+<a name="line542"></a>	 * $tb = $db->table('product');
+<a name="line543"></a>	 *
+<a name="line544"></a>	 * #参数为Int类型时，将以主键ID查询一笔记录并返回 Suco_Db_Table_Row
+<a name="line545"></a>	 * $row = $tb->find(2); //Query: where id = 2
+<a name="line546"></a>	 *
+<a name="line547"></a>	 * #参数为Array类型时，将以数组的键值查询一笔记录并返回 Suco_Db_Table_Row
+<a name="line548"></a>	 * $row = $tb->find(array('price' => 100, 'title' => 'test'));
+<a name="line549"></a>	 * //Query: where price = 100 AND title = 'test'
+<a name="line550"></a>	 *
+<a name="line551"></a>	 * #参数为String类型时，将以此作为where条件查询多笔记录并返回 Suco_Db_Table_Rows
+<a name="line552"></a>	 * $rows = $tb->find('price > 100'); //Query: where price > 100
+<a name="line553"></a>	 * </code>
+<a name="line554"></a>	 *
+<a name="line555"></a>	 * @param mixed $cond 查询条件
+<a name="line556"></a>	 * @return object
+<a name="line557"></a>	 */
+<a name="line558"></a>	public function getById($id)
+<a name="line559"></a>	{
+<a name="line560"></a>		static $cache = array();
+<a name="line561"></a>		if (!isset($cache[$id]) || $this->_refreshCache) {
+<a name="line562"></a>			$identity = $this->getIdentity();
+<a name="line563"></a>			$cond = $this->getAdapter()->quoteInto("{$identity} = ?", (int)$id);
+<a name="line564"></a>			$cache[$id] = $this->fetchRow($cond);
+<a name="line565"></a>			$cache[$id]->set($identity, $id);
+<a name="line566"></a>		}
+<a name="line567"></a>		return $cache[$id];
+<a name="line568"></a>	}
+<a name="line569"></a>
+<a name="line570"></a>	/**
+<a name="line571"></a>	 * 查询方法
+<a name="line572"></a>	 * 根据传入条件返回记录或记录集
+<a name="line573"></a>	 * 如：<code>
+<a name="line574"></a>	 * $tb = $db->table('product');
+<a name="line575"></a>	 *
+<a name="line576"></a>	 * #参数为Int类型时，将以主键ID查询一笔记录并返回 Suco_Db_Table_Row
+<a name="line577"></a>	 * $row = $tb->find(2); //Query: where id = 2
+<a name="line578"></a>	 *
+<a name="line579"></a>	 * #参数为Array类型时，将以数组的键值查询一笔记录并返回 Suco_Db_Table_Row
+<a name="line580"></a>	 * $row = $tb->find(array('price' => 100, 'title' => 'test'));
+<a name="line581"></a>	 * //Query: where price = 100 AND title = 'test'
+<a name="line582"></a>	 *
+<a name="line583"></a>	 * #参数为String类型时，将以此作为where条件查询多笔记录并返回 Suco_Db_Table_Rows
+<a name="line584"></a>	 * $rows = $tb->find('price > 100'); //Query: where price > 100
+<a name="line585"></a>	 * </code>
+<a name="line586"></a>	 *
+<a name="line587"></a>	 * @param mixed $cond 查询条件
+<a name="line588"></a>	 * @return object
+<a name="line589"></a>
+<a name="line590"></a>	public function find($cond)
+<a name="line591"></a>	{
+<a name="line592"></a>		static $cache = array();
+<a name="line593"></a>		$key = is_array($cond) ? http_build_query($cond) : $cond;
+<a name="line594"></a>		if (!isset($cache[$key]) || $this->_refreshCache) {
+<a name="line595"></a>			if (intval($cond) == $cond) {
+<a name="line596"></a>				$identity = $this->getIdentity();
+<a name="line597"></a>				$cond = $this->getAdapter()->quoteInto("{$identity} = ?", (int)$cond);
+<a name="line598"></a>				$cache[$key] = $this->fetchRow($cond);
+<a name="line599"></a>			} elseif (is_array($cond)) {
+<a name="line600"></a>				$parts = array();
+<a name="line601"></a>				foreach($cond as $field => $value) {
+<a name="line602"></a>					$parts[] = $this->getAdapter()->quoteInto("{$field} = ?", $value);
+<a name="line603"></a>				}
+<a name="line604"></a>				$cond = implode(' AND ', $parts);
+<a name="line605"></a>				$cache[$key] = $this->fetchRow($cond);
+<a name="line606"></a>			} else {
+<a name="line607"></a>				$cache[$key] = $this->fetchRows($cond);
+<a name="line608"></a>			}
+<a name="line609"></a>		}
+<a name="line610"></a>		return $cache[$key];
+<a name="line611"></a>	}
+<a name="line612"></a>	 */
+<a name="line613"></a>
+<a name="line614"></a>	/**
+<a name="line615"></a>	 * 设置表别名，并返回 Suco_Db_Select 对象
+<a name="line616"></a>	 *
+<a name="line617"></a>	 * @param string $alias
+<a name="line618"></a>	 * @return object
+<a name="line619"></a>	 */
+<a name="line620"></a>	public function alias($alias)
+<a name="line621"></a>	{
+<a name="line622"></a>		require_once 'Suco/Db/Table/Select.php';
+<a name="line623"></a>		$select = new Suco_Db_Table_Select($this);
+<a name="line624"></a>		$select->from($this->getTableName() . ' AS ' . $alias);
+<a name="line625"></a>		return $select;
+<a name="line626"></a>	}
+<a name="line627"></a>
+<a name="line628"></a>	/**
+<a name="line629"></a>	 * 开启SELECT语句，返回 Suco_Db_Select 对象
+<a name="line630"></a>	 *
+<a name="line631"></a>	 * @param string|array $cols
+<a name="line632"></a>	 * @return object
+<a name="line633"></a>	 */
+<a name="line634"></a>	public function select($cols = '*')
+<a name="line635"></a>	{
+<a name="line636"></a>		require_once 'Suco/Db/Table/Select.php';
+<a name="line637"></a>		$select = new Suco_Db_Table_Select($this);
+<a name="line638"></a>		$select->from($this->getTableName(), $cols);
+<a name="line639"></a>		return $select;
+<a name="line640"></a>	}
+<a name="line641"></a>
+<a name="line642"></a>	/**
+<a name="line643"></a>	 * 执行INSERT语句插入记录
+<a name="line644"></a>	 *
+<a name="line645"></a>	 * @param array $data 数组的键名对应字段名，键值对应字段值
+<a name="line646"></a>	 * @return int 返回主键ID
+<a name="line647"></a>	 */
+<a name="line648"></a>	public function insert($data)
+<a name="line649"></a>	{
+<a name="line650"></a>		$this->validation($data, 'insert');
+<a name="line651"></a>		
+<a name="line652"></a>		$this->_behavior('_insertBefore', array($data));
+<a name="line653"></a>		$this->getAdapter()->insert($this->getTableName(), $this->insertFilter($data));
+<a name="line654"></a>		$insertId = $this->getInsertId();
+<a name="line655"></a>		$this->_behavior('_insertAfter', array($data, $insertId));
+<a name="line656"></a>		$this->_refreshCache = 1;
+<a name="line657"></a>
+<a name="line658"></a>		return $insertId;
+<a name="line659"></a>	}
+<a name="line660"></a>
+<a name="line661"></a>	/**
+<a name="line662"></a>	 * 执行UPDATE语句更新记录
+<a name="line663"></a>	 * 例：<code>
+<a name="line664"></a>	 * $db->table('product')->update('price = 200', 'title = \'test\''); #将标题为test的价格改为200
+<a name="line665"></a>	 * #也可以这样写
+<a name="line666"></a>	 * $db->table('product')->update(array('price' => 200), 'title = ?', 'test');
+<a name="line667"></a>	 * </code>
+<a name="line668"></a>	 *
+<a name="line669"></a>	 * @param array|string $data 数组的键名对应字段名，键值对应字段值
+<a name="line670"></a>	 * @param string $cond 设定条件，支持参数化查询条件
+<a name="line671"></a>	 * @return void
+<a name="line672"></a>	 */
+<a name="line673"></a>	public function update($data, $cond = null)
+<a name="line674"></a>	{
+<a name="line675"></a>		$args = func_get_args();
+<a name="line676"></a>		if (isset($args[2])) {
+<a name="line677"></a>			$cond = $this->getAdapter()->quoteInto($cond, $args[2]);
+<a name="line678"></a>		}
+<a name="line679"></a>		if (is_numeric($cond)) {
+<a name="line680"></a>			throw new Suco_Db_Exception(__CLASS__.'::update 方法禁止传入int型');
+<a name="line681"></a>		}
+<a name="line682"></a>
+<a name="line683"></a>		if (is_array($data)) {
+<a name="line684"></a>			$this->validation($data, 'update');
+<a name="line685"></a>			foreach ((array)$this->_noModifyColumns as $col) {
+<a name="line686"></a>				if (isset($data[$col])) {
+<a name="line687"></a>					require_once 'Suco/Db/Table/Exception.php';
+<a name="line688"></a>					throw new Suco_Db_Table_Exception("禁止修改{$col}列");
+<a name="line689"></a>				}
+<a name="line690"></a>			}
+<a name="line691"></a>		}
+<a name="line692"></a>
+<a name="line693"></a>		$this->_behavior('_updateBefore', array($data, $cond));
+<a name="line694"></a>		$this->getAdapter()->update($this->getTableName(), (is_array($data) ? $this->updateFilter($data) : $data), $cond);
+<a name="line695"></a>		$this->_behavior('_updateAfter', array($data, $cond));
+<a name="line696"></a>		$this->_refreshCache = 1;
+<a name="line697"></a>
+<a name="line698"></a>		return $this->getAdapter()->getAffectedRows();
+<a name="line699"></a>	}
+<a name="line700"></a>
+<a name="line701"></a>	/**
+<a name="line702"></a>	 * 以主键ID为条件，执行UPDATE语句更新记录
+<a name="line703"></a>	 * 例：<code>
+<a name="line704"></a>	 * $db->table('product')->updateById('title = \'test\'', 2); 将主键ID=2的标题改为test
+<a name="line705"></a>	 * </code>
+<a name="line706"></a>	 *
+<a name="line707"></a>	 * @param array|string $data 数组的键名对应字段名，键值对应字段值
+<a name="line708"></a>	 * @param int $id 设定主键ID值
+<a name="line709"></a>	 * @return void
+<a name="line710"></a>	 */
+<a name="line711"></a>	public function updateById($data, $id)
+<a name="line712"></a>	{
+<a name="line713"></a>		$identity = $this->getIdentity();
+<a name="line714"></a>		$cond = $this->getAdapter()->quoteInto("{$identity} = ?", (int)$id);
+<a name="line715"></a>
+<a name="line716"></a>		if (is_array($data)) {
+<a name="line717"></a>			$data[$identity] = $id;
+<a name="line718"></a>		}
+<a name="line719"></a>
+<a name="line720"></a>		$this->_behavior('_updateByIdBefore', array($data, $id));
+<a name="line721"></a>		$result = $this->update($data, $cond);
+<a name="line722"></a>		$this->_behavior('_updateByIdAfter', array($data, $id));
+<a name="line723"></a>
+<a name="line724"></a>		return $result;
+<a name="line725"></a>	}
+<a name="line726"></a>
+<a name="line727"></a>	/**
+<a name="line728"></a>	 * 执行DELETE语句删除记录
+<a name="line729"></a>	 * 例：<code>
+<a name="line730"></a>	 * $db->table('product')->delete('price > 100'); 删除价格大于100的记录
+<a name="line731"></a>	 * </code>
+<a name="line732"></a>	 *
+<a name="line733"></a>	 * @param string $cond 设定条件，支持参数化查询条件
+<a name="line734"></a>	 * @return void
+<a name="line735"></a>	 */
+<a name="line736"></a>	public function delete($cond = null)
+<a name="line737"></a>	{
+<a name="line738"></a>		$args = func_get_args();
+<a name="line739"></a>		if (isset($args[1])) {
+<a name="line740"></a>			$cond = $this->getAdapter()->quoteInto($cond, $args[1]);
+<a name="line741"></a>		}
+<a name="line742"></a>		if (is_numeric($cond)) {
+<a name="line743"></a>			throw new Suco_Db_Exception(__CLASS__.'::update 方法禁止传入int型');
+<a name="line744"></a>		}
+<a name="line745"></a>
+<a name="line746"></a>		$this->_behavior('_deleteBefore', array($cond));
+<a name="line747"></a>		$this->getAdapter()->delete($this->getTableName(), $cond);
+<a name="line748"></a>		$this->_behavior('_deleteAfter', $cond);
+<a name="line749"></a>		$this->_refreshCache = 1;
+<a name="line750"></a>
+<a name="line751"></a>		return $this->getAdapter()->getAffectedRows();
+<a name="line752"></a>	}
+<a name="line753"></a>
+<a name="line754"></a>	/**
+<a name="line755"></a>	 * 以主键ID为条件，执行DELETE语句删除记录
+<a name="line756"></a>	 * 例：<code>
+<a name="line757"></a>	 * $db->table('product')->deleteById(2); 删除主键ID=2的记录
+<a name="line758"></a>	 * </code>
+<a name="line759"></a>	 * @param int $id 设定主键ID值
+<a name="line760"></a>	 * @return void
+<a name="line761"></a>	 */
+<a name="line762"></a>	public function deleteById($id)
+<a name="line763"></a>	{
+<a name="line764"></a>		$identity = $this->getIdentity();
+<a name="line765"></a>		$cond = $this->getAdapter()->quoteInto("{$identity} = ?", (int)$id);
+<a name="line766"></a>
+<a name="line767"></a>		$this->_behavior('_deleteByIdBefore', $id);
+<a name="line768"></a>		$result = $this->delete($cond);
+<a name="line769"></a>		$this->_behavior('_deleteByIdAfter', $id);
+<a name="line770"></a>		return $result;
+<a name="line771"></a>	}
+<a name="line772"></a>
+<a name="line773"></a>	/**
+<a name="line774"></a>	 * 执行COUNT查询
+<a name="line775"></a>	 * 例：<code>
+<a name="line776"></a>	 * $tb = $db->table('product');
+<a name="line777"></a>	 * $tb->count('price > 100'); //SELECT count(*) AS result FROM product WHERE price > 100
+<a name="line778"></a>	 * </code>
+<a name="line779"></a>	 *
+<a name="line780"></a>	 * @param string $cond 设定条件
+<a name="line781"></a>	 * @return int
+<a name="line782"></a>	 */
+<a name="line783"></a>	public function count($cond)
+<a name="line784"></a>	{
+<a name="line785"></a>		$args = func_get_args();
+<a name="line786"></a>		if (isset($args[1])) {
+<a name="line787"></a>			$cond = $this->getAdapter()->quoteInto($cond, $args[1]);
+<a name="line788"></a>		}
+<a name="line789"></a>		return $this->select()->where($cond)->getTotal();
+<a name="line790"></a>	}
+<a name="line791"></a>
+<a name="line792"></a>	/**
+<a name="line793"></a>	 * 数据有效性验证方式 (保留方法)
+<a name="line794"></a>	 *
+<a name="line795"></a>	 * @param array $data 传入数据
+<a name="line796"></a>	 * @param string $event 调用方法 insert或update
+<a name="line797"></a>	 * @return void
+<a name="line798"></a>	 */
+<a name="line799"></a>	public function validation($event, $data)
+<a name="line800"></a>	{
+<a name="line801"></a>	}
+<a name="line802"></a>
+<a name="line803"></a>	/**
+<a name="line804"></a>	 * 执行 insert 前的数据过滤
+<a name="line805"></a>	 *
+<a name="line806"></a>	 * @param array $data 传入数据
+<a name="line807"></a>	 * @return array
+<a name="line808"></a>	 */
+<a name="line809"></a>	public function insertFilter($data)
+<a name="line810"></a>	{
+<a name="line811"></a>		//添加默认值
+<a name="line812"></a>		$_defaultValues = $this->getDefaultValues();
+<a name="line813"></a>		foreach ($_defaultValues as $field => $value) {
+<a name="line814"></a>			if (!isset($data[$field])) {
+<a name="line815"></a>				$data[$field] = $value;
+<a name="line816"></a>			}
+<a name="line817"></a>		}
+<a name="line818"></a>		return $this->filter($this->inputFilter($data));
+<a name="line819"></a>	}
+<a name="line820"></a>
+<a name="line821"></a>	/**
+<a name="line822"></a>	 * 执行 update 前的数据过滤
+<a name="line823"></a>	 *
+<a name="line824"></a>	 * @param array $data 传入数据
+<a name="line825"></a>	 * @return array
+<a name="line826"></a>	 */
+<a name="line827"></a>	public function updateFilter($data) { return $this->filter($this->inputFilter($data)); }
+<a name="line828"></a>
+<a name="line829"></a>	/**
+<a name="line830"></a>	 * 执行 insert和update 前的数据过滤
+<a name="line831"></a>	 *
+<a name="line832"></a>	 * @param array $data 传入数据
+<a name="line833"></a>	 * @return array
+<a name="line834"></a>	 */
+<a name="line835"></a>	public function inputFilter($data) { return $data; }
+<a name="line836"></a>
+<a name="line837"></a>	/**
+<a name="line838"></a>	 * 输出记录前的数据过滤
+<a name="line839"></a>	 *
+<a name="line840"></a>	 * @param array $data 传入数据
+<a name="line841"></a>	 * @return array
+<a name="line842"></a>	 */
+<a name="line843"></a>	public function outputFilter($data) { return $data; }
+<a name="line844"></a>
+<a name="line845"></a>	/**
+<a name="line846"></a>	 * 数据过滤,此方法在调用insert和update前会被自动调用
+<a name="line847"></a>	 */
+<a name="line848"></a>	public function filter($data)
+<a name="line849"></a>	{
+<a name="line850"></a>		$metadata = $this->getMetadata();
+<a name="line851"></a>		$columns = array();
+<a name="line852"></a>		foreach ($metadata as $field => $col) {
+<a name="line853"></a>			//扔掉多余的列
+<a name="line854"></a>			if (!isset($data[$field])) { continue; }
+<a name="line855"></a>			//if (isset($col['IDENTITY'])) { continue; }
+<a name="line856"></a>
+<a name="line857"></a>			$columns[$field] = $data[$field];
+<a name="line858"></a>
+<a name="line859"></a>			//强制转换数值类型
+<a name="line860"></a>			if (isset($columns[$field]) && $this->getAdapter()->isNumeric($col['TYPE'])) {
+<a name="line861"></a>				$columns[$field] = floatval($columns[$field]);
+<a name="line862"></a>			} else {
+<a name="line863"></a>				$columns[$field] = strval($columns[$field]);
+<a name="line864"></a>			}
+<a name="line865"></a>
+<a name="line866"></a>			//强制转换数组
+<a name="line867"></a>			if (is_array($data[$field])) {
+<a name="line868"></a>				foreach ($data[$field] as $key => $val) {
+<a name="line869"></a>					if (!$val) unset($data[$field][$key]);
+<a name="line870"></a>				}
+<a name="line871"></a>				$columns[$field] = implode($this->_arraySeparator, $data[$field]);
+<a name="line872"></a>			}
+<a name="line873"></a>
+<a name="line874"></a>			//强制截取
+<a name="line875"></a>			if (isset($columns[$field]) && isset($col['LENGTH']) && strlen($columns[$field]) > $col['LENGTH']) {
+<a name="line876"></a>				$columns[$field] = substr($columns[$field], 0, $col['LENGTH']);
+<a name="line877"></a>			}
+<a name="line878"></a>
+<a name="line879"></a>		}
+<a name="line880"></a>		return $columns;
+<a name="line881"></a>	}
+<a name="line882"></a>
+<a name="line883"></a>	/**
+<a name="line884"></a>	 * 解析参数化查询
+<a name="line885"></a>	 *
+<a name="line886"></a>	 * @param string $expr 表达式
+<a name="line887"></a>	 * @param array $params 参数
+<a name="line888"></a>	 * @return string
+<a name="line889"></a>	 */
+<a name="line890"></a>	public function quoteInto($expr, $params)
+<a name="line891"></a>	{
+<a name="line892"></a>		return Suco_Db_Adapter_Abstract::quoteInto($expr, $params);
+<a name="line893"></a>	}
+<a name="line894"></a>
+<a name="line895"></a>	/**
+<a name="line896"></a>	 * 指定字段返回一个唯一数
+<a name="line897"></a>	 *
+<a name="line898"></a>	 * @param string $column
+<a name="line899"></a>	 * @param int $length
+<a name="line900"></a>	 * @return int
+<a name="line901"></a>	 */
+<a name="line902"></a>	public function getUniqueCode($length = 6, $prefix = '1', $column = '')
+<a name="line903"></a>	{
+<a name="line904"></a>		$metadata = $this->getMetadata();
+<a name="line905"></a>		$result = $this->select('MAX('.($column ? $column : $this->_identity).') AS result')->cache(false)->fetchCol('result') + 1;
+<a name="line906"></a>		if (strlen($result) < $length) {
+<a name="line907"></a>			$s = $length - strlen($result) - strlen($prefix);
+<a name="line908"></a>			$z = @str_repeat('0', $s);
+<a name="line909"></a>			$result = $prefix . $z . $result;
+<a name="line910"></a>		} elseif (strlen($result) > $length) {
+<a name="line911"></a>			$result = substr($result, $length * -1 + strlen($prefix));
+<a name="line912"></a>			$result = $prefix . $result;
+<a name="line913"></a>		}
+<a name="line914"></a>
+<a name="line915"></a>		return $result;
+<a name="line916"></a>	}
+<a name="line917"></a>
+<a name="line918"></a>	/**
+<a name="line919"></a>	 * 行为插件，当系统发现有定义行为方法时将自动调用方法
+<a name="line920"></a>	 * 当前系统内置以下行为
+<a name="line921"></a>	 * _insertBefore, _insertAfter
+<a name="line922"></a>	 * _updateBefore, _updateAfter
+<a name="line923"></a>	 * _deleteBefore, _deleteAfter
+<a name="line924"></a>	 * 如：<code>
+<a name="line925"></a>	 * class Product extends Suco_Db_Table
+<a name="line926"></a>	 * {
+<a name="line927"></a>	 * 		protected function _deleteAfter()
+<a name="line928"></a>	 * 		{
+<a name="line929"></a>	 * 			//删除产品后执行关联操作, 如删除产品评论，相册等
+<a name="line930"></a>	 * 		}
+<a name="line931"></a>	 * }
+<a name="line932"></a>	 * </code>
+<a name="line933"></a>	 *
+<a name="line934"></a>	 *
+<a name="line935"></a>	 * @param string $behavior
+<a name="line936"></a>	 * @param array $params
+<a name="line937"></a>	 * @return int
+<a name="line938"></a>	 */
+<a name="line939"></a>	protected function _behavior($behavior, $params)
+<a name="line940"></a>	{
+<a name="line941"></a>		if (method_exists($this, $behavior)) {
+<a name="line942"></a>			call_user_func_array(array($this, $behavior), (array)$params);
+<a name="line943"></a>		}
+<a name="line944"></a>		//查找触发器
+<a name="line945"></a>		foreach ($this->getTriggers() as $trigger) {
+<a name="line946"></a>			$trigger->observer($this, $behavior, $params);
+<a name="line947"></a>		}
+<a name="line948"></a>	}
+<a name="line949"></a>
+<a name="line950"></a>	/**
+<a name="line951"></a>	 * 获取 Metadata
+<a name="line952"></a>	 *
+<a name="line953"></a>	 * @return void
+<a name="line954"></a>	 */
+<a name="line955"></a>	protected function _setupMetadata()
+<a name="line956"></a>	{
+<a name="line957"></a>		if ($this->_metadata) return;
+<a name="line958"></a>		$this->setMetadata($this->getAdapter()->getDescribeTable($this->getTableName()));
+<a name="line959"></a>		foreach ($this->_metadata as $field => $col) {
+<a name="line960"></a>			$this->_columns[] = $field;
+<a name="line961"></a>			if (isset($col['PRIMARY']) && !$this->_primary) {
+<a name="line962"></a>				$this->_primary[] = $field;
+<a name="line963"></a>			}
+<a name="line964"></a>			if (isset($col['IDENTITY']) && !$this->_identity) {
+<a name="line965"></a>				$this->_identity = $field;
+<a name="line966"></a>			}
+<a name="line967"></a>			if (isset($col['DEFAULT']) && !$this->_defaultValues) {
+<a name="line968"></a>				$this->_defaultValues[$field] = $col['DEFAULT'];
+<a name="line969"></a>			}
+<a name="line970"></a>			if ($col['NOT_NULL'] && !isset($col['DEFAULT']) && !isset($col['IDENTITY'])) { //非空字段,且不是自增字段添加默认值
+<a name="line971"></a>				$this->_defaultValues[$field] = $this->getAdapter()->isNumeric($col['TYPE']) ? 0 : '';
+<a name="line972"></a>			}
+<a name="line973"></a>		}
+<a name="line974"></a>		if (is_array($this->_primary) && count($this->_primary) == 1) {
+<a name="line975"></a>			$this->_primary = $this->_primary[0];
+<a name="line976"></a>		}
+<a name="line977"></a>		if (!$this->_identity) {
+<a name="line978"></a>			$this->setIdentity(is_array($this->_primary) ? $this->_primary[0] : $this->_primary);
+<a name="line979"></a>		}
+<a name="line980"></a>	}
+<a name="line981"></a>
+<a name="line982"></a>	/**
+<a name="line983"></a>	 * CALL 魔术方法
+<a name="line984"></a>	 *
+<a name="line985"></a>	 * @param string $method
+<a name="line986"></a>	 * @param array $args
+<a name="line987"></a>	 *
+<a name="line988"></a>	 * @return mixed
+<a name="line989"></a>	 */
+<a name="line990"></a>	public function __call($method, $args)
+<a name="line991"></a>	{
+<a name="line992"></a>		if (substr($method, 0, 5) == 'getBy') {
+<a name="line993"></a>			$k = strtolower(substr($method, 5));
+<a name="line994"></a>			return $this->select()
+<a name="line995"></a>				->where($k.' = ?', $args[0])
+<a name="line996"></a>				->fetchRow();
+<a name="line997"></a>		}
+<a name="line998"></a>
+<a name="line999"></a>		require_once 'Suco/Exception.php';
+<a name="line1000"></a>		throw new Suco_Exception("找不到方法 ".__CLASS__."::{$method}()");
+<a name="line1001"></a>	}
+<a name="line1002"></a>}</pre>
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\db\table\abstract.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

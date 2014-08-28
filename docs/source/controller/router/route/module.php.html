@@ -1,0 +1,251 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:36 +0000">
+
+<link rel="stylesheet" type="text/css" href="../stylesheet.css">
+<link rel="start" href="../overview-summary.html">
+
+<title>Controller\Router\Route\Module.php (SucoPHP API Doc)</title>
+
+</head>
+<body id="file" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\controller\router\route\module.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<h1>Controller\Router\Route\Module.php</h1>
+<hr>
+
+<a name="line1"></a><pre><?php
+<a name="line2"></a>/**
+<a name="line3"></a> * Suco_Controller_Router_Route_Module 模块路由
+<a name="line4"></a> *
+<a name="line5"></a> *
+<a name="line6"></a> * @version		3.0 2009/09/01
+<a name="line7"></a> * @author		Eric Yu (blueflu@live.cn)
+<a name="line8"></a> * @copyright	Copyright (c) 2008, Suconet, Inc.
+<a name="line9"></a> * @license		http://www.suconet.com/license
+<a name="line10"></a> * @package		Controller
+<a name="line11"></a> * -----------------------------------------------------------
+<a name="line12"></a> */
+<a name="line13"></a>
+<a name="line14"></a>require_once 'Suco/Controller/Router/Route/Abstract.php';
+<a name="line15"></a>
+<a name="line16"></a>class Suco_Controller_Router_Route_Module extends Suco_Controller_Router_Route_Abstract implements Suco_Controller_Router_Route_Interface
+<a name="line17"></a>{
+<a name="line18"></a>	protected $_request;
+<a name="line19"></a>	protected $_dispatcher;
+<a name="line20"></a>
+<a name="line21"></a>	protected $_variable = ':';
+<a name="line22"></a>	protected $_wildcard = '*';
+<a name="line23"></a>
+<a name="line24"></a>	//发生冲突时的转义符
+<a name="line25"></a>	protected $_delimit = array('/', '--');
+<a name="line26"></a>	protected $_escape = array('#d1#', '#d2#');
+<a name="line27"></a>
+<a name="line28"></a>	protected $_defaultRegex = '([^/]+)';
+<a name="line29"></a>	protected $_configs = array();
+<a name="line30"></a>
+<a name="line31"></a>	protected $_suffix = '.html';
+<a name="line32"></a>
+<a name="line33"></a>	/**
+<a name="line34"></a>	 * 构造函数
+<a name="line35"></a>	 *
+<a name="line36"></a>	 * @return void
+<a name="line37"></a>	 */
+<a name="line38"></a>	public function __construct($pattern = null, $options = null)
+<a name="line39"></a>	{
+<a name="line40"></a>		if (isset($options['suffix'])) {
+<a name="line41"></a>			$this->_suffix = $options['suffix'];
+<a name="line42"></a>		}
+<a name="line43"></a>		if (isset($options['delimit'])) {
+<a name="line44"></a>			$this->_delimit = $optinos['delimit'];
+<a name="line45"></a>		}
+<a name="line46"></a>
+<a name="line47"></a>		$this->_dispatcher = Suco_Application::instance()->getDispatcher();
+<a name="line48"></a>		$this->_request = Suco_Application::instance()->getRequest();
+<a name="line49"></a>		parent::__construct($pattern, $options);
+<a name="line50"></a>	}
+<a name="line51"></a>
+<a name="line52"></a>	/**
+<a name="line53"></a>	 * 正向解析
+<a name="line54"></a>	 *
+<a name="line55"></a>	 * @param object $request 请求对象
+<a name="line56"></a>	 * @return array
+<a name="line57"></a>	 */
+<a name="line58"></a>	public function match($pathinfo)
+<a name="line59"></a>	{
+<a name="line60"></a>		$pathinfo = str_replace(array($this->_request->getServer('SCRIPT_NAME'), $this->_suffix), null, $pathinfo);
+<a name="line61"></a>
+<a name="line62"></a>		$parts = explode($this->_delimit[0], trim($this->_pattern, $this->_delimit[0]));
+<a name="line63"></a>		$paths = explode($this->_delimit[0], trim($pathinfo, $this->_delimit[0]));
+<a name="line64"></a>		$params = $this->_defaults;
+<a name="line65"></a>		if ($parts[0] == $this->_variable . 'module' && !$this->_dispatcher->isModule($paths[0])) {
+<a name="line66"></a>			array_shift($parts);
+<a name="line67"></a>		}
+<a name="line68"></a>		foreach ($parts as $pos => $part) {
+<a name="line69"></a>			if (substr($part, 0, 1) == $this->_variable) {//变量
+<a name="line70"></a>				$varname = substr($part, 1);
+<a name="line71"></a>				$pattern = isset($this->_params[$varname]) ? $this->_params[$varname] : $this->_defaultRegex;
+<a name="line72"></a>				if (isset($paths[$pos]) && preg_match('#'.$pattern.'#', $paths[$pos], $values)) {
+<a name="line73"></a>					$params[$varname] = $values[1];
+<a name="line74"></a>				}
+<a name="line75"></a>				continue;
+<a name="line76"></a>			} elseif ($part == $this->_wildcard) {//通配符
+<a name="line77"></a>				if ($this->_delimit[0] != $this->_delimit[1]) {
+<a name="line78"></a>					$querys = isset($paths[$pos]) ? explode($this->_delimit[1], $paths[$pos]) : array();
+<a name="line79"></a>					$key = 0;
+<a name="line80"></a>				} else {
+<a name="line81"></a>					$querys = $paths;
+<a name="line82"></a>					$key = &$pos;
+<a name="line83"></a>				}
+<a name="line84"></a>				while (isset($querys[$key])) {
+<a name="line85"></a>					$varname = $this->decode($querys[$key]);
+<a name="line86"></a>					if (isset($querys[$key+1])) {
+<a name="line87"></a>						$value = $this->decode($querys[$key+1]);
+<a name="line88"></a>						unset($params[$querys[$key]]);
+<a name="line89"></a>						$params[$varname] = $value;
+<a name="line90"></a>					}
+<a name="line91"></a>					$key += 2;
+<a name="line92"></a>				}
+<a name="line93"></a>				continue;
+<a name="line94"></a>			} else { //静态变量
+<a name="line95"></a>				if (isset($paths[$pos]) && $part == $paths[$pos]) {
+<a name="line96"></a>					continue;
+<a name="line97"></a>				}
+<a name="line98"></a>				return false;
+<a name="line99"></a>			}
+<a name="line100"></a>		}
+<a name="line101"></a>
+<a name="line102"></a>		if (!empty($_GET) && empty($_POST)) {
+<a name="line103"></a>			$redirect = 1;
+<a name="line104"></a>			foreach ($_GET as $key => $val) {
+<a name="line105"></a>				if ($val == NULL) {
+<a name="line106"></a>					unset($_GET[$key]);
+<a name="line107"></a>					unset($params[$key]);
+<a name="line108"></a>				}
+<a name="line109"></a>				if ($this->_request->getModuleKey() == $key
+<a name="line110"></a>					|| $this->_request->getControllerKey() == $key
+<a name="line111"></a>						|| $this->_request->getActionKey() == $key) {
+<a name="line112"></a>					$redirect = 1;
+<a name="line113"></a>				}
+<a name="line114"></a>			}
+<a name="line115"></a>
+<a name="line116"></a>			if ($redirect && !$this->_request->isAjax()) {
+<a name="line117"></a>				$url = Suco_Application::instance()->getRequest()->getBaseUrl()
+<a name="line118"></a>					 . '/' . trim($this->reverseMatch(array_merge($params, $_GET)), '/');
+<a name="line119"></a>				#Suco_Application::instance()->getResponse()->redirect($url);
+<a name="line120"></a>			}
+<a name="line121"></a>		}
+<a name="line122"></a>		return $params;
+<a name="line123"></a>	}
+<a name="line124"></a>
+<a name="line125"></a>	/**
+<a name="line126"></a>	 * 反向解析
+<a name="line127"></a>	 *
+<a name="line128"></a>	 * @param array $options
+<a name="line129"></a>	 * @return string
+<a name="line130"></a>	 */
+<a name="line131"></a>	public function reverseMatch($options)
+<a name="line132"></a>	{
+<a name="line133"></a>		if ($mapping = Suco_Application::instance()->getRouter()->getDomainMapping()) {
+<a name="line134"></a>			foreach ($mapping as $host => $mod) {
+<a name="line135"></a>				if ($mod == $options['module']) {
+<a name="line136"></a>					$options['module'] = '';
+<a name="line137"></a>					break;
+<a name="line138"></a>				}
+<a name="line139"></a>			}
+<a name="line140"></a>		}
+<a name="line141"></a>		$parts = $last = explode($this->_delimit[0], trim($this->_pattern, $this->_delimit[0]));
+<a name="line142"></a>		foreach ($parts as $pos => $part) {
+<a name="line143"></a>			if (substr($part, 0, 1) == $this->_variable) {
+<a name="line144"></a>				$varname = substr($part, 1);
+<a name="line145"></a>				if (!isset($options[$varname])) {
+<a name="line146"></a>					return false;
+<a name="line147"></a>				} elseif($options) {
+<a name="line148"></a>					$url[$varname] = $options[$varname];
+<a name="line149"></a>				}
+<a name="line150"></a>				unset($options[$varname]);
+<a name="line151"></a>				unset($last[$pos]);
+<a name="line152"></a>				continue;
+<a name="line153"></a>			} elseif ($part == $this->_wildcard) {
+<a name="line154"></a>				$params = array();
+<a name="line155"></a>    			if (count($options) > 0) {
+<a name="line156"></a>    				foreach ($options as $key => $value) {
+<a name="line157"></a>    					if (in_array($key, array_keys($this->_defaults))) {
+<a name="line158"></a>    						continue;
+<a name="line159"></a>    					}
+<a name="line160"></a>    					if ($value != null) {
+<a name="line161"></a>	    					$value = $value;
+<a name="line162"></a>	    					$params[] = $this->encode($key);
+<a name="line163"></a>	    					$params[] = $this->encode($value);
+<a name="line164"></a>    					}
+<a name="line165"></a>    				}
+<a name="line166"></a>    			}
+<a name="line167"></a>    			unset($last[$pos]);
+<a name="line168"></a>    			continue;
+<a name="line169"></a>			}
+<a name="line170"></a>		}
+<a name="line171"></a>		
+<a name="line172"></a>		//默认模块
+<a name="line173"></a>		if ($url['module'] == $this->_dispatcher->getDefaultModule() || !$url['module']) {
+<a name="line174"></a>			unset($url['module']);
+<a name="line175"></a>		}
+<a name="line176"></a>		if ($url['controller'] == $this->_dispatcher->getDefaultController() && !isset($url['module']) || !$url['controller']) {
+<a name="line177"></a>			unset($url['controller']);
+<a name="line178"></a>		}
+<a name="line179"></a>		/* if ($url['action'] == $this->_dispatcher->getDefaultAction() || !$url['action'])
+<a name="line180"></a>		{
+<a name="line181"></a>			unset($url['action']);
+<a name="line182"></a>		} */
+<a name="line183"></a>
+<a name="line184"></a>		$base = trim(implode($this->_delimit[0], $last), $this->_delimit[0]);
+<a name="line185"></a>		$url = ($base ? $base . $this->_delimit[0] : null). trim(implode($this->_delimit[0], $url), $this->_delimit[0]) . $this->_delimit[0];
+<a name="line186"></a>		if ($params) {
+<a name="line187"></a>			$url .= implode($this->_delimit[1], $params) . $this->_suffix;
+<a name="line188"></a>		}
+<a name="line189"></a>		return $url;
+<a name="line190"></a>	}
+<a name="line191"></a>}</pre>
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\controller\router\route\module.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

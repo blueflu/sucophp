@@ -1,0 +1,207 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:36 +0000">
+
+<link rel="stylesheet" type="text/css" href="../stylesheet.css">
+<link rel="start" href="../overview-summary.html">
+
+<title>Loader\File.php (SucoPHP API Doc)</title>
+
+</head>
+<body id="file" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\loader\file.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<h1>Loader\File.php</h1>
+<hr>
+
+<a name="line1"></a><pre><?php
+<a name="line2"></a>/**
+<a name="line3"></a> * Suco_Loader_File 文件装载器
+<a name="line4"></a> *
+<a name="line5"></a> * @version		3.0 2009/09/01
+<a name="line6"></a> * @author		Eric Yu (blueflu@live.cn)
+<a name="line7"></a> * @copyright	Copyright (c) 2009, Suconet, Inc.
+<a name="line8"></a> * @package		Loader
+<a name="line9"></a> * @license		http://www.suconet.com/license
+<a name="line10"></a> * -----------------------------------------------------------
+<a name="line11"></a> */
+<a name="line12"></a>
+<a name="line13"></a>class Suco_Loader_File
+<a name="line14"></a>{
+<a name="line15"></a>	/**
+<a name="line16"></a>	 * 包含目录
+<a name="line17"></a>	 * @var array
+<a name="line18"></a>	 */
+<a name="line19"></a>	protected static $_includePaths = array();
+<a name="line20"></a>
+<a name="line21"></a>	/**
+<a name="line22"></a>	 * 已载入的文件
+<a name="line23"></a>	 * @var array
+<a name="line24"></a>	 */
+<a name="line25"></a>	protected static $_loaded = array();
+<a name="line26"></a>
+<a name="line27"></a>	/**
+<a name="line28"></a>	 * 添加包含目录
+<a name="line29"></a>	 *
+<a name="line30"></a>	 * @param string $path
+<a name="line31"></a>	 * @return void
+<a name="line32"></a>	 */
+<a name="line33"></a>	public static function addIncludePath($path)
+<a name="line34"></a>	{
+<a name="line35"></a>		self::$_includePaths[] = realpath($path);
+<a name="line36"></a>	}
+<a name="line37"></a>
+<a name="line38"></a>	/**
+<a name="line39"></a>	 * 设置包含目录集
+<a name="line40"></a>	 *
+<a name="line41"></a>	 * @param string $paths
+<a name="line42"></a>	 * @return void
+<a name="line43"></a>	 */
+<a name="line44"></a>	public static function setIncludePaths($paths)
+<a name="line45"></a>	{
+<a name="line46"></a>		foreach ($paths as $path) {
+<a name="line47"></a>			self::addIncludePath($path);
+<a name="line48"></a>		}
+<a name="line49"></a>	}
+<a name="line50"></a>
+<a name="line51"></a>	/**
+<a name="line52"></a>	 * 返回包含目录集
+<a name="line53"></a>	 *
+<a name="line54"></a>	 * @return array
+<a name="line55"></a>	 */
+<a name="line56"></a>	public static function getIncludePaths()
+<a name="line57"></a>	{
+<a name="line58"></a>		return array_merge(self::$_includePaths, explode(PATH_SEPARATOR, get_include_path()));
+<a name="line59"></a>	}
+<a name="line60"></a>
+<a name="line61"></a>	/**
+<a name="line62"></a>	 * 返回已载入的文件
+<a name="line63"></a>	 *
+<a name="line64"></a>	 * @return array
+<a name="line65"></a>	 */
+<a name="line66"></a>	public static function getLoaded()
+<a name="line67"></a>	{
+<a name="line68"></a>		return array_keys(self::$_loaded);
+<a name="line69"></a>	}
+<a name="line70"></a>
+<a name="line71"></a>	/**
+<a name="line72"></a>	 * 检查文件是否存在
+<a name="line73"></a>	 *
+<a name="line74"></a>	 * @return array
+<a name="line75"></a>	 */
+<a name="line76"></a>	public static function exists($file)
+<a name="line77"></a>	{
+<a name="line78"></a>		if (is_file($file)) return true;
+<a name="line79"></a>
+<a name="line80"></a>		$paths = self::getIncludePaths();
+<a name="line81"></a>		foreach ($paths as $path) {
+<a name="line82"></a>			if (is_file($path . DIRECTORY_SEPARATOR . $file)) {
+<a name="line83"></a>				return true;
+<a name="line84"></a>			}
+<a name="line85"></a>		}
+<a name="line86"></a>		return false;
+<a name="line87"></a>	}
+<a name="line88"></a>
+<a name="line89"></a>	/**
+<a name="line90"></a>	 * loadFile 的别名
+<a name="line91"></a>	 */
+<a name="line92"></a>	public static function import($file, $once = true, $throw = true)
+<a name="line93"></a>	{
+<a name="line94"></a>		self::loadFile($file, $once, $throw);
+<a name="line95"></a>	}
+<a name="line96"></a>
+<a name="line97"></a>	/**
+<a name="line98"></a>	 * 装载文件
+<a name="line99"></a>	 *
+<a name="line100"></a>	 * @param string $file
+<a name="line101"></a>	 * @param bool $once
+<a name="line102"></a>	 * @param bool $throw
+<a name="line103"></a>	 * @return void
+<a name="line104"></a>	 */
+<a name="line105"></a>	public static function loadFile($file, $once = true, $throw = true)
+<a name="line106"></a>	{
+<a name="line107"></a>		//先从当前目录查找
+<a name="line108"></a>		if (is_file($file)) {
+<a name="line109"></a>			self::includeFile($file, $once);
+<a name="line110"></a>			return true;
+<a name="line111"></a>		}
+<a name="line112"></a>
+<a name="line113"></a>		$paths = self::getIncludePaths();
+<a name="line114"></a>		foreach ($paths as $path) {
+<a name="line115"></a>			if (is_file($path . DIRECTORY_SEPARATOR . $file)) {
+<a name="line116"></a>				self::includeFile($path . DIRECTORY_SEPARATOR . $file, $once);
+<a name="line117"></a>				return true;
+<a name="line118"></a>			}
+<a name="line119"></a>		}
+<a name="line120"></a>
+<a name="line121"></a>		if ($throw == true) {
+<a name="line122"></a>			require_once 'Suco/Loader/Exception.php';
+<a name="line123"></a>			throw new Suco_Loader_Exception("加载文件失败  {$file} [".implode(PATH_SEPARATOR, $paths)."]");
+<a name="line124"></a>		}
+<a name="line125"></a>		return false;
+<a name="line126"></a>	}
+<a name="line127"></a>
+<a name="line128"></a>	/**
+<a name="line129"></a>	 * 引入文件
+<a name="line130"></a>	 *
+<a name="line131"></a>	 * @param string $file
+<a name="line132"></a>	 * @param bool $once
+<a name="line133"></a>	 * @return void
+<a name="line134"></a>	 */
+<a name="line135"></a>	public static function includeFile($file, $once = false)
+<a name="line136"></a>	{
+<a name="line137"></a>		if ($once == true) {
+<a name="line138"></a>			if (!isset($file, self::$_loaded[$file])) {
+<a name="line139"></a>				include_once $file;
+<a name="line140"></a>			}
+<a name="line141"></a>		} else {
+<a name="line142"></a>			include $file;
+<a name="line143"></a>		}
+<a name="line144"></a>		self::$_loaded[$file] = true;
+<a name="line145"></a>	}
+<a name="line146"></a>}
+<a name="line147"></a>?></pre>
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\loader\file.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

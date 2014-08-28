@@ -1,0 +1,305 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:36 +0000">
+
+<link rel="stylesheet" type="text/css" href="../stylesheet.css">
+<link rel="start" href="../overview-summary.html">
+
+<title>Controller\Request\Abstract.php (SucoPHP API Doc)</title>
+
+</head>
+<body id="file" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\controller\request\abstract.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<h1>Controller\Request\Abstract.php</h1>
+<hr>
+
+<a name="line1"></a><pre><?php
+<a name="line2"></a>/**
+<a name="line3"></a> * Suco_Controller_Request_Abstract 请求抽象类
+<a name="line4"></a> *
+<a name="line5"></a> *
+<a name="line6"></a> * @version		3.0 2009/09/01
+<a name="line7"></a> * @author		Eric Yu (blueflu@live.cn)
+<a name="line8"></a> * @copyright	Copyright (c) 2008, Suconet, Inc.
+<a name="line9"></a> * @license		http://www.suconet.com/license
+<a name="line10"></a> * @package		Controller
+<a name="line11"></a> * -----------------------------------------------------------
+<a name="line12"></a> */
+<a name="line13"></a>
+<a name="line14"></a>require_once 'Suco/Controller/Request/Interface.php';
+<a name="line15"></a>
+<a name="line16"></a>class Suco_Controller_Request_Abstract implements Suco_Controller_Request_Interface, ArrayAccess, Iterator, Countable
+<a name="line17"></a>{
+<a name="line18"></a>	protected $_params;
+<a name="line19"></a>	protected $_valid;
+<a name="line20"></a>
+<a name="line21"></a>	protected $_moduleName;
+<a name="line22"></a>	protected $_controllerName;
+<a name="line23"></a>	protected $_actionName;
+<a name="line24"></a>
+<a name="line25"></a>	protected $_moduleKey = 'module';
+<a name="line26"></a>	protected $_controllerKey = 'controller';
+<a name="line27"></a>	protected $_actionKey = 'action';
+<a name="line28"></a>
+<a name="line29"></a>	/**
+<a name="line30"></a>	 * 单件实例
+<a name="line31"></a>	 * @return self
+<a name="line32"></a>	 */
+<a name="line33"></a>	public function instance()
+<a name="line34"></a>	{
+<a name="line35"></a>		static $instance;
+<a name="line36"></a>		if (!isset($instance)) {
+<a name="line37"></a>			$instance = new self();
+<a name="line38"></a>		}
+<a name="line39"></a>		return $instance;
+<a name="line40"></a>	}
+<a name="line41"></a>
+<a name="line42"></a>	public function set($key, $value)
+<a name="line43"></a>	{
+<a name="line44"></a>		$this->setParam($key, $value);
+<a name="line45"></a>	}
+<a name="line46"></a>
+<a name="line47"></a>	public function get($key)
+<a name="line48"></a>	{
+<a name="line49"></a>		return $this->getParam($key);
+<a name="line50"></a>	}
+<a name="line51"></a>
+<a name="line52"></a>	public function __set($key, $value)
+<a name="line53"></a>	{
+<a name="line54"></a>		$this->set($key, $value);
+<a name="line55"></a>	}
+<a name="line56"></a>
+<a name="line57"></a>	public function __get($key)
+<a name="line58"></a>	{
+<a name="line59"></a>		return $this->get($key);
+<a name="line60"></a>	}
+<a name="line61"></a>
+<a name="line62"></a>	public function __isset($key)
+<a name="line63"></a>	{
+<a name="line64"></a>		$params = $this->getParams();
+<a name="line65"></a>		return isset($params[$key]);
+<a name="line66"></a>	}
+<a name="line67"></a>
+<a name="line68"></a>	public function __unset($key)
+<a name="line69"></a>	{
+<a name="line70"></a>		unset($this->_params[$key]);
+<a name="line71"></a>	}
+<a name="line72"></a>
+<a name="line73"></a>	public function offsetSet($offset, $value)
+<a name="line74"></a>	{
+<a name="line75"></a>		$this->set($offset, $value);
+<a name="line76"></a>	}
+<a name="line77"></a>
+<a name="line78"></a>	public function offsetGet($offset)
+<a name="line79"></a>	{
+<a name="line80"></a>		return $this->get($offset);
+<a name="line81"></a>	}
+<a name="line82"></a>
+<a name="line83"></a>    public function offsetExists($offset)
+<a name="line84"></a>    {
+<a name="line85"></a>        return isset($this->_params[$offset]);
+<a name="line86"></a>    }
+<a name="line87"></a>
+<a name="line88"></a>	public function offsetUnset($offset)
+<a name="line89"></a>	{
+<a name="line90"></a>		unset($this->_params[$offset]);
+<a name="line91"></a>	}
+<a name="line92"></a>
+<a name="line93"></a>    public function current()
+<a name="line94"></a>    {
+<a name="line95"></a>        return current($this->_params);
+<a name="line96"></a>    }
+<a name="line97"></a>
+<a name="line98"></a>    public function key()
+<a name="line99"></a>    {
+<a name="line100"></a>        return key($this->_params);
+<a name="line101"></a>    }
+<a name="line102"></a>
+<a name="line103"></a>    public function next()
+<a name="line104"></a>    {
+<a name="line105"></a>		$this->_valid = next($this->_params);
+<a name="line106"></a>    }
+<a name="line107"></a>
+<a name="line108"></a>    public function rewind()
+<a name="line109"></a>    {
+<a name="line110"></a>        $this->_valid = reset($this->_params);
+<a name="line111"></a>    }
+<a name="line112"></a>
+<a name="line113"></a>    public function valid()
+<a name="line114"></a>    {
+<a name="line115"></a>        return $this->_valid;
+<a name="line116"></a>    }
+<a name="line117"></a>
+<a name="line118"></a>    public function count()
+<a name="line119"></a>    {
+<a name="line120"></a>        return count($this->_params);
+<a name="line121"></a>    }
+<a name="line122"></a>
+<a name="line123"></a>	/**
+<a name="line124"></a>	 * 设置请求的模块名
+<a name="line125"></a>	 * @param string $moduleName
+<a name="line126"></a>	 * @return self
+<a name="line127"></a>	 */
+<a name="line128"></a>	public function setModuleName($moduleName)
+<a name="line129"></a>	{
+<a name="line130"></a>		$this->_moduleName = $moduleName;
+<a name="line131"></a>		return $this;
+<a name="line132"></a>	}
+<a name="line133"></a>
+<a name="line134"></a>	/**
+<a name="line135"></a>	 * 返回请求的模型名
+<a name="line136"></a>	 * @return string
+<a name="line137"></a>	 */
+<a name="line138"></a>	public function getModuleName()
+<a name="line139"></a>	{
+<a name="line140"></a>		if (empty($this->_moduleName)) {
+<a name="line141"></a>			$this->setModuleName($this->getParam($this->getModuleKey()));
+<a name="line142"></a>		}
+<a name="line143"></a>		return $this->_moduleName;
+<a name="line144"></a>	}
+<a name="line145"></a>
+<a name="line146"></a>	/**
+<a name="line147"></a>	 * 设置请求的控制器名
+<a name="line148"></a>	 * @param string $controllerName
+<a name="line149"></a>	 * @return self
+<a name="line150"></a>	 */
+<a name="line151"></a>	public function setControllerName($controllerName)
+<a name="line152"></a>	{
+<a name="line153"></a>		$this->_controllerName = $controllerName;
+<a name="line154"></a>		return $this;
+<a name="line155"></a>	}
+<a name="line156"></a>
+<a name="line157"></a>	/**
+<a name="line158"></a>	 * 返回请求的控制器名
+<a name="line159"></a>	 * @return string
+<a name="line160"></a>	 */
+<a name="line161"></a>	public function getControllerName()
+<a name="line162"></a>	{
+<a name="line163"></a>		if (empty($this->_controllerName)) {
+<a name="line164"></a>			$this->setControllerName($this->getParam($this->getControllerKey()));
+<a name="line165"></a>		}
+<a name="line166"></a>		return $this->_controllerName;
+<a name="line167"></a>	}
+<a name="line168"></a>
+<a name="line169"></a>	/**
+<a name="line170"></a>	 * 设置请求的动作名
+<a name="line171"></a>	 * @param string $actionName
+<a name="line172"></a>	 * @return self
+<a name="line173"></a>	 */
+<a name="line174"></a>	public function setActionName($actionName)
+<a name="line175"></a>	{
+<a name="line176"></a>		$this->_actionName = $actionName;
+<a name="line177"></a>		return $this;
+<a name="line178"></a>	}
+<a name="line179"></a>
+<a name="line180"></a>	/**
+<a name="line181"></a>	 * 返回请求的动作名
+<a name="line182"></a>	 * @return string
+<a name="line183"></a>	 */
+<a name="line184"></a>	public function getActionName()
+<a name="line185"></a>	{
+<a name="line186"></a>		if (empty($this->_actionName)) {
+<a name="line187"></a>			$this->setActionName($this->getParam($this->getActionKey()));
+<a name="line188"></a>		}
+<a name="line189"></a>		return $this->_actionName;
+<a name="line190"></a>	}
+<a name="line191"></a>
+<a name="line192"></a>	/**
+<a name="line193"></a>	 * 设置模块键名
+<a name="line194"></a>	 * @param $key
+<a name="line195"></a>	 */
+<a name="line196"></a>	public function setModuleKey($key)
+<a name="line197"></a>	{
+<a name="line198"></a>		$this->_moduleKey = $key;
+<a name="line199"></a>	}
+<a name="line200"></a>
+<a name="line201"></a>	/**
+<a name="line202"></a>	 * 返回模块键名
+<a name="line203"></a>	 * @return string
+<a name="line204"></a>	 */
+<a name="line205"></a>	public function getModuleKey()
+<a name="line206"></a>	{
+<a name="line207"></a>		return $this->_moduleKey;
+<a name="line208"></a>	}
+<a name="line209"></a>
+<a name="line210"></a>	/**
+<a name="line211"></a>	 * 设置控制器键名
+<a name="line212"></a>	 * @param $key
+<a name="line213"></a>	 */
+<a name="line214"></a>	public function setControllerKey($key)
+<a name="line215"></a>	{
+<a name="line216"></a>		$this->_controllerKey = $key;
+<a name="line217"></a>	}
+<a name="line218"></a>
+<a name="line219"></a>	/**
+<a name="line220"></a>	 * 返回控制器键名
+<a name="line221"></a>	 * @return string
+<a name="line222"></a>	 */
+<a name="line223"></a>	public function getControllerKey()
+<a name="line224"></a>	{
+<a name="line225"></a>		return $this->_controllerKey;
+<a name="line226"></a>	}
+<a name="line227"></a>
+<a name="line228"></a>	/**
+<a name="line229"></a>	 * 设置动作键名
+<a name="line230"></a>	 * @param $key
+<a name="line231"></a>	 */
+<a name="line232"></a>	public function setActionKey($key)
+<a name="line233"></a>	{
+<a name="line234"></a>		$this->_actionKey = $key;
+<a name="line235"></a>	}
+<a name="line236"></a>
+<a name="line237"></a>	/**
+<a name="line238"></a>	 * 返回动作键名
+<a name="line239"></a>	 * @return string
+<a name="line240"></a>	 */
+<a name="line241"></a>	public function getActionKey()
+<a name="line242"></a>	{
+<a name="line243"></a>		return $this->_actionKey;
+<a name="line244"></a>	}
+<a name="line245"></a>}</pre>
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\controller\request\abstract.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

@@ -1,0 +1,277 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:36 +0000">
+
+<link rel="stylesheet" type="text/css" href="../stylesheet.css">
+<link rel="start" href="../overview-summary.html">
+
+<title>Helper\Paginator.php (SucoPHP API Doc)</title>
+
+</head>
+<body id="file" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\helper\paginator.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<h1>Helper\Paginator.php</h1>
+<hr>
+
+<a name="line1"></a><pre><?php
+<a name="line2"></a>/**
+<a name="line3"></a> * Suco_Helper_Paginator 分页条
+<a name="line4"></a> *
+<a name="line5"></a> * @version		3.0 2009/09/01
+<a name="line6"></a> * @author		Eric Yu (blueflu@live.cn)
+<a name="line7"></a> * @copyright	Copyright (c) 2009, Suconet, Inc.
+<a name="line8"></a> * @package		Helper
+<a name="line9"></a> * @license		http://www.suconet.com/license
+<a name="line10"></a> * -----------------------------------------------------------
+<a name="line11"></a> */
+<a name="line12"></a>
+<a name="line13"></a>class Suco_Helper_Paginator implements Suco_Helper_Interface
+<a name="line14"></a>{
+<a name="line15"></a>	protected $_totalRecord;
+<a name="line16"></a>	protected $_totalPage;
+<a name="line17"></a>	protected $_pageSize;
+<a name="line18"></a>	protected $_currentPage;
+<a name="line19"></a>	protected $_ajaxFunc;
+<a name="line20"></a>
+<a name="line21"></a>	public $nextPageCaption = 'Next »';
+<a name="line22"></a>	public $prevPageCaption = '«';
+<a name="line23"></a>	public $firstPageCaption = '';
+<a name="line24"></a>	public $lastPageCaption = '';
+<a name="line25"></a>	public $pageNumberLength = 5;
+<a name="line26"></a>
+<a name="line27"></a>	public static function callback($args)
+<a name="line28"></a>	{
+<a name="line29"></a>		static $instance = array();
+<a name="line30"></a>		$mark = serialize($args);
+<a name="line31"></a>		if (!isset($instance[$mark])) {
+<a name="line32"></a>			$instance[$mark] = new self($args[0], $args[1], $args[2], $args[3]);
+<a name="line33"></a>		}
+<a name="line34"></a>		return $instance[$mark];
+<a name="line35"></a>	}
+<a name="line36"></a>
+<a name="line37"></a>	public function __construct($totalRecord, $pageSize = 20, $currentPage = 1, $maxPage = 0, $ajaxFunc = null)
+<a name="line38"></a>	{
+<a name="line39"></a>		if ($totalRecord instanceof Suco_Db_Table_Rowset) {
+<a name="line40"></a>			$select = $totalRecord->getSelect();
+<a name="line41"></a>			$totalRecord = $totalRecord->getTotal();
+<a name="line42"></a>			$pageSize = $select->getPart(Suco_Db_Select::LIMIT_OFFSET);
+<a name="line43"></a>			$currentPage = @ceil($select->getPart(Suco_Db_Select::LIMIT_COUNT) / $pageSize) + 1;
+<a name="line44"></a>		}
+<a name="line45"></a>
+<a name="line46"></a>		$this->setAjaxFunc($ajaxFunc);
+<a name="line47"></a>		$this->setTotalRecord($totalRecord);
+<a name="line48"></a>		$this->setPageSize($pageSize);
+<a name="line49"></a>		$this->setCurrentPage($currentPage);
+<a name="line50"></a>		$this->setMaxPage($maxPage);
+<a name="line51"></a>	}
+<a name="line52"></a>
+<a name="line53"></a>	public function __toString()
+<a name="line54"></a>	{
+<a name="line55"></a>		return $this->getFullbar();
+<a name="line56"></a>	}
+<a name="line57"></a>
+<a name="line58"></a>	public function getAjaxBar($func)
+<a name="line59"></a>	{
+<a name="line60"></a>		$this->setAjaxFunc($func);
+<a name="line61"></a>		return $this;
+<a name="line62"></a>	}
+<a name="line63"></a>
+<a name="line64"></a>	public function getMiniBar()
+<a name="line65"></a>	{
+<a name="line66"></a>		return <<<EOF
+<a name="line67"></a><span class="pagestatus"> {$this->getCurrentPage()} / {$this->getTotalPage()}</span>
+<a name="line68"></a>{$this->prevPage()} {$this->nextPage()}
+<a name="line69"></a>EOF;
+<a name="line70"></a>	}
+<a name="line71"></a>
+<a name="line72"></a>	public function getFullBar()
+<a name="line73"></a>	{
+<a name="line74"></a>		return <<<EOF
+<a name="line75"></a><form method="get"><span class="pagestatus">Page <strong> {$this->getCurrentPage()}</strong> Of <strong>{$this->getTotalPage()}</strong></span>
+<a name="line76"></a>{$this->prevPage($this->prevPageCaption)} {$this->firstPage()} {$this->pageNumber()} {$this->lastPage()} {$this->nextPage($this->nextPageCaption)} {$this->getInputBox()}</form>
+<a name="line77"></a>EOF;
+<a name="line78"></a>	}
+<a name="line79"></a>
+<a name="line80"></a>	public function getInputBox()
+<a name="line81"></a>	{
+<a name="line82"></a>		return '<span class="gotopage">Go to Page <input type="text" name="page" value="'.$this->getCurrentPage().'" size="3" /><button type="submit">GO</button></span>';
+<a name="line83"></a>	}
+<a name="line84"></a>
+<a name="line85"></a>	public function setAjaxFunc($ajaxFunc)
+<a name="line86"></a>	{
+<a name="line87"></a>		$this->_ajaxFunc = $ajaxFunc;
+<a name="line88"></a>	}
+<a name="line89"></a>
+<a name="line90"></a>	public function getAjaxFunc()
+<a name="line91"></a>	{
+<a name="line92"></a>		return $this->_ajaxFunc;
+<a name="line93"></a>	}
+<a name="line94"></a>
+<a name="line95"></a>	public function setMaxPage($maxPage)
+<a name="line96"></a>	{
+<a name="line97"></a>		$this->_maxPage = $maxPage;
+<a name="line98"></a>	}
+<a name="line99"></a>
+<a name="line100"></a>	public function getMaxPage()
+<a name="line101"></a>	{
+<a name="line102"></a>		return $this->_maxPage;
+<a name="line103"></a>	}
+<a name="line104"></a>
+<a name="line105"></a>	public function setTotalRecord($totalRecord)
+<a name="line106"></a>	{
+<a name="line107"></a>		$this->_totalRecord = $totalRecord;
+<a name="line108"></a>	}
+<a name="line109"></a>
+<a name="line110"></a>	public function getTotalRecord()
+<a name="line111"></a>	{
+<a name="line112"></a>		return $this->_totalRecord;
+<a name="line113"></a>	}
+<a name="line114"></a>
+<a name="line115"></a>	public function setPageSize($pageSize)
+<a name="line116"></a>	{
+<a name="line117"></a>		$this->_pageSize = $pageSize;
+<a name="line118"></a>	}
+<a name="line119"></a>
+<a name="line120"></a>	public function getPageSize()
+<a name="line121"></a>	{
+<a name="line122"></a>		return $this->_pageSize;
+<a name="line123"></a>	}
+<a name="line124"></a>
+<a name="line125"></a>	public function setCurrentPage($currentPage)
+<a name="line126"></a>	{
+<a name="line127"></a>		$this->_currentPage = $currentPage ? $currentPage : 1;
+<a name="line128"></a>	}
+<a name="line129"></a>
+<a name="line130"></a>	public function getCurrentPage()
+<a name="line131"></a>	{
+<a name="line132"></a>		return $this->_currentPage;
+<a name="line133"></a>	}
+<a name="line134"></a>
+<a name="line135"></a>	public function setTotalPage()
+<a name="line136"></a>	{
+<a name="line137"></a>		$this->_totalPage = @ceil($this->getTotalRecord() / $this->getPageSize());
+<a name="line138"></a>		if ($this->_maxPage && $this->_totalPage > $this->_maxPage) {
+<a name="line139"></a>			$this->_totalPage = $this->_maxPage;
+<a name="line140"></a>		}
+<a name="line141"></a>	}
+<a name="line142"></a>
+<a name="line143"></a>	public function getTotalPage()
+<a name="line144"></a>	{
+<a name="line145"></a>		if (!$this->_totalPage) {
+<a name="line146"></a>			$this->setTotalPage();
+<a name="line147"></a>		}
+<a name="line148"></a>		return $this->_totalPage ? $this->_totalPage : 1;
+<a name="line149"></a>	}
+<a name="line150"></a>
+<a name="line151"></a>	/**
+<a name="line152"></a>	 * 构造页码
+<a name="line153"></a>	 * @return string
+<a name="line154"></a>	 */
+<a name="line155"></a>	public function pageNumber($length = null)
+<a name="line156"></a>	{
+<a name="line157"></a>		if ($length) {
+<a name="line158"></a>			$this->pageNumberLength = $length;
+<a name="line159"></a>		} else {
+<a name="line160"></a>			$length = $this->pageNumberLength;
+<a name="line161"></a>		}
+<a name="line162"></a>
+<a name="line163"></a>		$str = null;
+<a name="line164"></a>		for ($i = $this->getCurrentPage() - $length; $i < $this->getCurrentPage() + $length + 1; $i++) {
+<a name="line165"></a>			if ($i < 1 || $i > $this->getTotalPage()) continue;
+<a name="line166"></a>			$str .= '<a '.($this->getCurrentPage() == $i ? ' class="current"' : 'href="'.$this->go($i).'"').'>'.$i.'</a> ';
+<a name="line167"></a>		}
+<a name="line168"></a>
+<a name="line169"></a>		return $str;
+<a name="line170"></a>	}
+<a name="line171"></a>
+<a name="line172"></a>	public function prevPage($caption = null)
+<a name="line173"></a>	{
+<a name="line174"></a>		return '<a href="'.$this->go('prev').'" class="prev-page'.($this->getCurrentPage() > 1 ? '' : ' disable').'">'.($caption ? $caption : $this->prevPageCaption).'</a>';
+<a name="line175"></a>	}
+<a name="line176"></a>
+<a name="line177"></a>	public function nextPage($caption = null)
+<a name="line178"></a>	{
+<a name="line179"></a>		return '<a href="'.$this->go('next').'" class="next-page'.($this->getCurrentPage() < $this->getTotalPage() ? '' : ' disable').'">'.($caption ? $caption : $this->nextPageCaption).'</a>';
+<a name="line180"></a>	}
+<a name="line181"></a>
+<a name="line182"></a>	public function firstPage($caption = '')
+<a name="line183"></a>	{
+<a name="line184"></a>		if ((!$caption && $this->getCurrentPage() - $this->pageNumberLength - 1 < 1)) {
+<a name="line185"></a>			return;
+<a name="line186"></a>		}
+<a name="line187"></a>		return '<a href="'.$this->go('first').'">'.($caption ? $caption : 1).'</a>' . ($caption ? '' : '...');
+<a name="line188"></a>	}
+<a name="line189"></a>
+<a name="line190"></a>	public function lastPage($caption = '')
+<a name="line191"></a>	{
+<a name="line192"></a>		if ((!$caption && $this->_currentPage > $this->getTotalPage() - $this->pageNumberLength - 1)) {
+<a name="line193"></a>			return;
+<a name="line194"></a>		}
+<a name="line195"></a>		return ($caption ? '' : ' ... ') . '<a href="'.$this->go('last').'">'.($caption ? $caption : $this->_totalPage).'</a>';
+<a name="line196"></a>	}
+<a name="line197"></a>
+<a name="line198"></a>	public function go($page)
+<a name="line199"></a>	{
+<a name="line200"></a>		switch ($page) {
+<a name="line201"></a>			case 'first': $page = 1; break;
+<a name="line202"></a>			case 'last': $page = $this->getTotalPage(); break;
+<a name="line203"></a>			case 'next': $page = $this->getCurrentPage() >= $this->getTotalPage() ? $this->getCurrentPage() : $this->getCurrentPage()+1;
+<a name="line204"></a>				break;
+<a name="line205"></a>			case 'prev':
+<a name="line206"></a>				$page = $this->getCurrentPage() <= 1 ? $this->getCurrentPage() : $this->getCurrentPage()-1;
+<a name="line207"></a>				break;
+<a name="line208"></a>		}
+<a name="line209"></a>
+<a name="line210"></a>		if ($this->getAjaxFunc()) {
+<a name="line211"></a>			return 'javascript:'.$this->getAjaxFunc().'('.$page.')"';
+<a name="line212"></a>		} else {
+<a name="line213"></a>			return Suco_Application::instance()->getRouter()
+<a name="line214"></a>				->reverse('&page=' . ($page > 1 ? $page : ''));
+<a name="line215"></a>		}
+<a name="line216"></a>	}
+<a name="line217"></a>}</pre>
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\helper\paginator.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

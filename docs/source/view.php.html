@@ -1,0 +1,335 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:36 +0000">
+
+<link rel="stylesheet" type="text/css" href="../stylesheet.css">
+<link rel="start" href="../overview-summary.html">
+
+<title>View.php (SucoPHP API Doc)</title>
+
+</head>
+<body id="file" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\view.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<h1>View.php</h1>
+<hr>
+
+<a name="line1"></a><pre><?php
+<a name="line2"></a>/**
+<a name="line3"></a> * Suco_View 视图类
+<a name="line4"></a> *
+<a name="line5"></a> * @version		3.0 2009/09/01
+<a name="line6"></a> * @author		Eric Yu (blueflu@live.cn)
+<a name="line7"></a> * @copyright	Copyright (c) 2009, Suconet, Inc.
+<a name="line8"></a> * @package		View
+<a name="line9"></a> * @license		http://www.suconet.com/license
+<a name="line10"></a> * -----------------------------------------------------------
+<a name="line11"></a> */
+<a name="line12"></a>
+<a name="line13"></a>require_once 'Suco/View/Abstract.php';
+<a name="line14"></a>require_once 'Suco/View/Interface.php';
+<a name="line15"></a>
+<a name="line16"></a>class Suco_View extends Suco_View_Abstract implements Suco_View_Interface
+<a name="line17"></a>{
+<a name="line18"></a>	/**
+<a name="line19"></a>	 * 主题目录
+<a name="line20"></a>	 * @var string
+<a name="line21"></a>	 */
+<a name="line22"></a>	protected $_themePath;
+<a name="line23"></a>
+<a name="line24"></a>
+<a name="line25"></a>	/**
+<a name="line26"></a>	 * 视图布局
+<a name="line27"></a>	 * @var string
+<a name="line28"></a>	 */
+<a name="line29"></a>	protected $_layoutPath;
+<a name="line30"></a>
+<a name="line31"></a>	/**
+<a name="line32"></a>	 * 当前布局文件
+<a name="line33"></a>	 * @var string
+<a name="line34"></a>	 */
+<a name="line35"></a>	protected $_layoutFile;
+<a name="line36"></a>
+<a name="line37"></a>	/**
+<a name="line38"></a>	 * 是否已载入布局
+<a name="line39"></a>	 * @var bool
+<a name="line40"></a>	 */
+<a name="line41"></a>	protected $_layoutLoaded = false;
+<a name="line42"></a>
+<a name="line43"></a>	/**
+<a name="line44"></a>	 * 魔术方法
+<a name="line45"></a>	 * 调用辅助类
+<a name="line46"></a>	 *
+<a name="line47"></a>	 * @param string $name
+<a name="line48"></a>	 * @param array $args
+<a name="line49"></a>	 * @return void
+<a name="line50"></a>	 */
+<a name="line51"></a>	public function __call($name, $args)
+<a name="line52"></a>	{
+<a name="line53"></a>		$helper = Suco_Helper::factory($name);
+<a name="line54"></a>		return call_user_func_array(array($helper, 'callback'), array($args));
+<a name="line55"></a>	}
+<a name="line56"></a>
+<a name="line57"></a>	/**
+<a name="line58"></a>	 * 设置主题目录
+<a name="line59"></a>	 *
+<a name="line60"></a>	 * @param string $path
+<a name="line61"></a>	 * @return object
+<a name="line62"></a>	 */
+<a name="line63"></a>	public function setThemePath($path)
+<a name="line64"></a>	{
+<a name="line65"></a>		$this->_themePath = $path;
+<a name="line66"></a>		return $this;
+<a name="line67"></a>	}
+<a name="line68"></a>
+<a name="line69"></a>	/**
+<a name="line70"></a>	 * 返回主题目录
+<a name="line71"></a>	 *
+<a name="line72"></a>	 * @return string
+<a name="line73"></a>	 */
+<a name="line74"></a>	public function getThemePath()
+<a name="line75"></a>	{
+<a name="line76"></a>		return $this->_themePath;
+<a name="line77"></a>	}
+<a name="line78"></a>
+<a name="line79"></a>	/**
+<a name="line80"></a>	 * 设置布局文件
+<a name="line81"></a>	 *
+<a name="line82"></a>	 * @param string $file
+<a name="line83"></a>	 * @return object
+<a name="line84"></a>	 */
+<a name="line85"></a>	public function setLayout($file)
+<a name="line86"></a>	{
+<a name="line87"></a>		$this->_layoutFile = $file;
+<a name="line88"></a>		return $this;
+<a name="line89"></a>	}
+<a name="line90"></a>
+<a name="line91"></a>	/**
+<a name="line92"></a>	 * 返回布局文件
+<a name="line93"></a>	 *
+<a name="line94"></a>	 * @return string
+<a name="line95"></a>	 */
+<a name="line96"></a>	public function getLayout()
+<a name="line97"></a>	{
+<a name="line98"></a>		return $this->_layoutFile;
+<a name="line99"></a>	}
+<a name="line100"></a>
+<a name="line101"></a>	/**
+<a name="line102"></a>	 * 设置布局路径
+<a name="line103"></a>	 *
+<a name="line104"></a>	 * @param string $path
+<a name="line105"></a>	 * @return object
+<a name="line106"></a>	 */
+<a name="line107"></a>	public function setLayoutPath($path)
+<a name="line108"></a>	{
+<a name="line109"></a>		$this->_layoutPath = $path;
+<a name="line110"></a>		return $this;
+<a name="line111"></a>	}
+<a name="line112"></a>
+<a name="line113"></a>	/**
+<a name="line114"></a>	 * 返回布局路径
+<a name="line115"></a>	 *
+<a name="line116"></a>	 * @return string
+<a name="line117"></a>	 */	
+<a name="line118"></a>	public function getLayoutPath()
+<a name="line119"></a>	{
+<a name="line120"></a>		return $this->_layoutPath;
+<a name="line121"></a>	}
+<a name="line122"></a>
+<a name="line123"></a>	/**
+<a name="line124"></a>	 * 设置辅助类路径
+<a name="line125"></a>	 *
+<a name="line126"></a>	 * @param string $path
+<a name="line127"></a>	 * @return object
+<a name="line128"></a>	 */
+<a name="line129"></a>	public function setHelperPath($path)
+<a name="line130"></a>	{
+<a name="line131"></a>		Suco_Helper::setHelperPath($path);
+<a name="line132"></a>		return $this;
+<a name="line133"></a>	}
+<a name="line134"></a>
+<a name="line135"></a>	/**
+<a name="line136"></a>	 * 返回辅助类路径
+<a name="line137"></a>	 *
+<a name="line138"></a>	 * @return string
+<a name="line139"></a>	 */
+<a name="line140"></a>	public function getHelperPath()
+<a name="line141"></a>	{
+<a name="line142"></a>		return Suco_Helper::getHelperPath;
+<a name="line143"></a>	}
+<a name="line144"></a>
+<a name="line145"></a>	/**
+<a name="line146"></a>	 * 渲染并返回视图
+<a name="line147"></a>	 *
+<a name="line148"></a>	 * @param string $file
+<a name="line149"></a>	 * @param array $data
+<a name="line150"></a>	 * @return string
+<a name="line151"></a>	 */
+<a name="line152"></a>	public function output($file, $data = null)
+<a name="line153"></a>	{
+<a name="line154"></a>		if ($data) {
+<a name="line155"></a>			$this->assign($data);
+<a name="line156"></a>		}
+<a name="line157"></a>
+<a name="line158"></a>		//渲染视图
+<a name="line159"></a>		$content = $this->_render($file, $this->_scriptPath);
+<a name="line160"></a>
+<a name="line161"></a>		//渲染布局
+<a name="line162"></a>		if ($layout = $this->getLayout()) {
+<a name="line163"></a>			$this->layout = $this->layout();
+<a name="line164"></a>			$this->layout->content = $content;
+<a name="line165"></a>			$content = $this->_render($layout, $this->_layoutPath);
+<a name="line166"></a>		}
+<a name="line167"></a>		return $content;
+<a name="line168"></a>	}
+<a name="line169"></a>
+<a name="line170"></a>	/**
+<a name="line171"></a>	 * 渲染并显示视图
+<a name="line172"></a>	 *
+<a name="line173"></a>	 * @param string $file
+<a name="line174"></a>	 * @param array $data
+<a name="line175"></a>	 * @return string
+<a name="line176"></a>	 */
+<a name="line177"></a>	public function render($file, $data = null)
+<a name="line178"></a>	{
+<a name="line179"></a>		if ($data) {
+<a name="line180"></a>			$this->assign($data);
+<a name="line181"></a>		}
+<a name="line182"></a>
+<a name="line183"></a>		//渲染视图
+<a name="line184"></a>		$content = $this->_render($file, $this->_scriptPath);
+<a name="line185"></a>
+<a name="line186"></a>		//渲染布局
+<a name="line187"></a>		if ($layout = $this->getLayout()) {
+<a name="line188"></a>			$this->layout = $this->layout();
+<a name="line189"></a>			$this->layout->content = $content;
+<a name="line190"></a>			$content = $this->_render($layout, $this->_layoutPath);
+<a name="line191"></a>		}
+<a name="line192"></a>		$this->getResponse()->appendBody($content);
+<a name="line193"></a>
+<a name="line194"></a>		return $content;
+<a name="line195"></a>	}
+<a name="line196"></a>
+<a name="line197"></a>	/**
+<a name="line198"></a>	 * 渲染并显示视图块
+<a name="line199"></a>	 * 此方法不加载视图的布局
+<a name="line200"></a>	 *
+<a name="line201"></a>	 * @param string $file
+<a name="line202"></a>	 * @param array $data
+<a name="line203"></a>	 * @return string
+<a name="line204"></a>	 */
+<a name="line205"></a>	public function partial($file, $data = null)
+<a name="line206"></a>	{
+<a name="line207"></a>		if ($data) {
+<a name="line208"></a>			$this->assign($data);
+<a name="line209"></a>		}
+<a name="line210"></a>
+<a name="line211"></a>		echo $this->_render($file, $this->_scriptPath);
+<a name="line212"></a>	}
+<a name="line213"></a>
+<a name="line214"></a>	/**
+<a name="line215"></a>	 * 捕捉片断开始
+<a name="line216"></a>	 * 使用此方法时，系统会忽略片断之前和之后的内容，只显示被捕捉到的部分
+<a name="line217"></a>	 * 如:<code>
+<a name="line218"></a>	 *
+<a name="line219"></a>	 * echo 'before output';
+<a name="line220"></a>	 * $view = new Suco_View();
+<a name="line221"></a>	 * $view->fragmentStart()
+<a name="line222"></a>	 * echo '这里是被捕捉到的片断';
+<a name="line223"></a>	 * $view->fragmentEnd();
+<a name="line224"></a>	 * echo 'after output';
+<a name="line225"></a>	 *
+<a name="line226"></a>	 * #output
+<a name="line227"></a>	 * 这里是被捕捉到的片断
+<a name="line228"></a>	 *
+<a name="line229"></a>	 * </code>
+<a name="line230"></a>	 *
+<a name="line231"></a>	 * @return void
+<a name="line232"></a>	 */
+<a name="line233"></a>	public function fragmentStart()
+<a name="line234"></a>	{
+<a name="line235"></a>		ob_get_clean();
+<a name="line236"></a>		ob_start();
+<a name="line237"></a>	}
+<a name="line238"></a>
+<a name="line239"></a>	/**
+<a name="line240"></a>	 * 捕捉片断结束
+<a name="line241"></a>	 *
+<a name="line242"></a>	 * @return void
+<a name="line243"></a>	 */
+<a name="line244"></a>	public function fragmentEnd()
+<a name="line245"></a>	{
+<a name="line246"></a>		echo ob_get_clean(); exit;
+<a name="line247"></a>	}
+<a name="line248"></a>
+<a name="line249"></a>	/**
+<a name="line250"></a>	 * 渲染视图
+<a name="line251"></a>	 *
+<a name="line252"></a>	 * @return string
+<a name="line253"></a>	 */
+<a name="line254"></a>	protected function _render($file, $path = null)
+<a name="line255"></a>	{
+<a name="line256"></a>		ob_start();
+<a name="line257"></a>		$file = str_replace('/', DIRECTORY_SEPARATOR, $path . $file);
+<a name="line258"></a>		if (!is_file($file)) {
+<a name="line259"></a>			require_once 'Suco/View/Exception.php';
+<a name="line260"></a>			throw new Suco_View_Exception("找不到视图 [$file]");
+<a name="line261"></a>		}
+<a name="line262"></a>
+<a name="line263"></a>		$view = &$this;
+<a name="line264"></a>
+<a name="line265"></a>		require $file;
+<a name="line266"></a>
+<a name="line267"></a>		$site = Suco_Application::instance()->getRequest()->getHost();
+<a name="line268"></a>		$site = $site ? trim($site, '/').'/' : '';
+<a name="line269"></a>
+<a name="line270"></a>		$baseUrl = Suco_Application::instance()->getRequest()->getBasePath();
+<a name="line271"></a>		$baseUrl = $baseUrl ? trim($baseUrl, '/').'/' : '';
+<a name="line272"></a>		
+<a name="line273"></a>		return str_replace('./', $site.$baseUrl.$this->getThemePath(), ob_get_clean());
+<a name="line274"></a>	}
+<a name="line275"></a>}</pre>
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\view.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

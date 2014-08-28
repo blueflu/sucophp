@@ -1,0 +1,157 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:36 +0000">
+
+<link rel="stylesheet" type="text/css" href="../stylesheet.css">
+<link rel="start" href="../overview-summary.html">
+
+<title>Helper.php (SucoPHP API Doc)</title>
+
+</head>
+<body id="file" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\helper.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<h1>Helper.php</h1>
+<hr>
+
+<a name="line1"></a><pre><?php
+<a name="line2"></a>/**
+<a name="line3"></a> * Suco_Helper 辅助类工厂
+<a name="line4"></a> *
+<a name="line5"></a> * @version		3.0 2009/09/01
+<a name="line6"></a> * @author		Eric Yu (blueflu@live.cn)
+<a name="line7"></a> * @copyright	Copyright (c) 2009, Suconet, Inc.
+<a name="line8"></a> * @package		Helper
+<a name="line9"></a> * @license		http://www.suconet.com/license
+<a name="line10"></a> * -----------------------------------------------------------
+<a name="line11"></a> */
+<a name="line12"></a>
+<a name="line13"></a>class Suco_Helper
+<a name="line14"></a>{
+<a name="line15"></a>	/**
+<a name="line16"></a>	 * 类命名空间
+<a name="line17"></a>	 * @var string
+<a name="line18"></a>	 */
+<a name="line19"></a>	protected static $_helperNamespace = 'Helper_';
+<a name="line20"></a>
+<a name="line21"></a>	/**
+<a name="line22"></a>	 * 辅助类目录
+<a name="line23"></a>	 * @var string
+<a name="line24"></a>	 */
+<a name="line25"></a>	protected static $_helperPath;
+<a name="line26"></a>
+<a name="line27"></a>	/**
+<a name="line28"></a>	 * 工厂方法
+<a name="line29"></a>	 *
+<a name="line30"></a>	 * @param string $name
+<a name="line31"></a>	 * @return string
+<a name="line32"></a>	 */
+<a name="line33"></a>	public static function factory($name)
+<a name="line34"></a>	{
+<a name="line35"></a>		$classname = 'Suco_Helper_' . ucfirst($name);
+<a name="line36"></a>		if (self::getHelperPath()) {
+<a name="line37"></a>			$file = self::getHelperPath() . ucfirst($name) . '.php';
+<a name="line38"></a>			if (is_file($file)) {
+<a name="line39"></a>				require_once $file;
+<a name="line40"></a>				if (self::getHelperNamespace()) {
+<a name="line41"></a>					$classname = self::getHelperNamespace() . ucfirst($name);
+<a name="line42"></a>				}
+<a name="line43"></a>				return $classname;
+<a name="line44"></a>			}
+<a name="line45"></a>		}
+<a name="line46"></a>
+<a name="line47"></a>		try {
+<a name="line48"></a>			require_once 'Suco/Loader/Class.php';
+<a name="line49"></a>			Suco_Loader_Class::loadClass($classname);
+<a name="line50"></a>			return $classname;
+<a name="line51"></a>		} catch (Suco_Loader_Exception $e) {
+<a name="line52"></a>			throw new Suco_Loader_Exception("加载辅助类{$classname}失败!");
+<a name="line53"></a>		}
+<a name="line54"></a>	}
+<a name="line55"></a>
+<a name="line56"></a>	/**
+<a name="line57"></a>	 * 设置辅助类目录
+<a name="line58"></a>	 *
+<a name="line59"></a>	 * @param string $path
+<a name="line60"></a>	 * @return void
+<a name="line61"></a>	 */
+<a name="line62"></a>	public static function setHelperPath($path)
+<a name="line63"></a>	{
+<a name="line64"></a>		self::$_helperPath = $path;
+<a name="line65"></a>	}
+<a name="line66"></a>
+<a name="line67"></a>	/**
+<a name="line68"></a>	 * 返回辅助类目录
+<a name="line69"></a>	 *
+<a name="line70"></a>	 * @return string
+<a name="line71"></a>	 */
+<a name="line72"></a>	public static function getHelperPath()
+<a name="line73"></a>	{
+<a name="line74"></a>		return self::$_helperPath;
+<a name="line75"></a>	}
+<a name="line76"></a>
+<a name="line77"></a>	/**
+<a name="line78"></a>	 * 设置辅助类命名空间
+<a name="line79"></a>	 *
+<a name="line80"></a>	 * @param string $namespace
+<a name="line81"></a>	 * @return void
+<a name="line82"></a>	 */
+<a name="line83"></a>	public static function setHelperNamespace($namespace)
+<a name="line84"></a>	{
+<a name="line85"></a>		self::$_helperNamespace = $namespace;
+<a name="line86"></a>	}
+<a name="line87"></a>
+<a name="line88"></a>	/**
+<a name="line89"></a>	 * 返回辅助类命名空间
+<a name="line90"></a>	 *
+<a name="line91"></a>	 * @return string
+<a name="line92"></a>	 */
+<a name="line93"></a>	public static function getHelperNamespace()
+<a name="line94"></a>	{
+<a name="line95"></a>		return self::$_helperNamespace;
+<a name="line96"></a>	}
+<a name="line97"></a>}</pre>
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\helper.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

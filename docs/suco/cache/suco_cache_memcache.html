@@ -1,0 +1,262 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:34 +0000">
+
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css">
+<link rel="start" href="../../overview-summary.html">
+
+<title>Suco_Cache_Memcache (SucoPHP API Doc)</title>
+
+</head>
+<body id="definition" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="../../suco/cache/package-summary.html">Namespace</a></li>
+<li class="active">Class</li>
+<li><a href="../../suco/cache/package-tree.html">Tree</a></li>
+<li><a href="../../overview-files.html">Files</a></li>
+<li><a href="../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../todo-list.html">Todo</a></li>
+<li><a href="../../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../../index.html" target="_top">Frames</a>
+<a href="../../suco\cache\suco_cache_memcache.html" target="_top">No frames</a>
+</div>
+<div class="small_links">
+Summary: <a href="#summary_field">Field</a> | <a href="#summary_method">Method</a> | <a href="#summary_constr">Constr</a>
+Detail: <a href="#detail_field">Field</a> | <a href="#detail_method">Method</a> | <a href="#summary_constr">Constr</a>
+</div>
+<hr>
+
+<div class="qualifiedName">Suco\Cache\Suco_Cache_Memcache</div>
+<a href="../../source/cache/memcache.php.html#line27" class="location">Cache\Memcache.php at line 27</a>
+
+<h1>Class Suco_Cache_Memcache</h1>
+
+<pre class="tree">Memcache<br> └─<strong>Suco_Cache_Memcache</strong><br /></pre>
+
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd><a href="../../suco/cache/suco_cache_interface.html">Suco_Cache_Interface</a> </dd>
+</dl>
+
+<hr>
+
+<p class="signature">public  class <strong>Suco_Cache_Memcache</strong><br>extends Memcache
+
+</p>
+
+<div class="comment" id="overview_description"><p>Suco_Cache_Memcache, Memcache 缓存封装
+完全继承原始 Memcache 类的所以特性</p></div>
+
+<dl>
+<dt>Version:</dt>
+<dd>3.0 2009/09/01</dd>
+<dt>License:</dt>
+<dd>http://www.suconet.com/license</dd>
+<dt>Author:</dt>
+<dd>Eric Yu (blueflu@live.cn)</dd>
+<dt>Copyright:</dt>
+<dd>Copyright (c) 2009, Suconet, Inc.</dd>
+</dl>
+<hr>
+
+<table id="summary_method">
+<tr><th colspan="2">Method Summary</th></tr>
+<tr>
+<td class="type">static  void</td>
+<td class="description"><p class="name"><a href="#instance()">instance</a>()</p><p class="description">单件实例</p></td>
+</tr>
+<tr>
+<td class="type">static  void</td>
+<td class="description"><p class="name"><a href="#connect()">connect</a>(mixed host, mixed port, int timeout)</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setPconnect()">setPconnect</a>(bool flag)</p><p class="description">设置是否常连接</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setConnectTimeout()">setConnectTimeout</a>(int timeout)</p><p class="description">设置连接超时时间</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setServer()">setServer</a>(string host)</p><p class="description">设置服务器地址</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setPort()">setPort</a>(string host, mixed port)</p><p class="description">设置端口地址</p></td>
+</tr>
+<tr>
+<td class="type"> array</td>
+<td class="description"><p class="name"><a href="#getAllBlocks()">getAllBlocks</a>(str prefix)</p><p class="description">取出所有缓存块</p></td>
+</tr>
+<tr>
+<td class="type"> mixed</td>
+<td class="description"><p class="name"><a href="#load()">load</a>(string|int id)</p><p class="description">载入缓存块</p></td>
+</tr>
+<tr>
+<td class="type"> mixed</td>
+<td class="description"><p class="name"><a href="#save()">save</a>(mixed data, mixed exp, mixed id)</p><p class="description">保存缓存</p></td>
+</tr>
+<tr>
+<td class="type"> bool</td>
+<td class="description"><p class="name"><a href="#delete()">delete</a>(string id)</p><p class="description">删除缓存块</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#flush()">flush</a>()</p><p class="description">清空所有缓存</p></td>
+</tr>
+</table>
+
+<h2 id="detail_method">Method Detail</h2>
+<a href="../../source/cache/memcache.php.html#line48" class="location">Cache\Memcache.php at line 48</a>
+
+<h3 id="instance()">instance</h3>
+<code class="signature">public static  void <strong>instance</strong>()</code>
+<div class="details">
+<p>单件实例</p></div>
+
+<hr>
+
+<a href="../../source/cache/memcache.php.html#line57" class="location">Cache\Memcache.php at line 57</a>
+
+<h3 id="connect()">connect</h3>
+<code class="signature">public static  void <strong>connect</strong>(mixed host, mixed port, int timeout)</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../source/cache/memcache.php.html#line70" class="location">Cache\Memcache.php at line 70</a>
+
+<h3 id="setPconnect()">setPconnect</h3>
+<code class="signature">public  void <strong>setPconnect</strong>(bool flag)</code>
+<div class="details">
+<p>设置是否常连接</p></div>
+
+<hr>
+
+<a href="../../source/cache/memcache.php.html#line79" class="location">Cache\Memcache.php at line 79</a>
+
+<h3 id="setConnectTimeout()">setConnectTimeout</h3>
+<code class="signature">public  void <strong>setConnectTimeout</strong>(int timeout)</code>
+<div class="details">
+<p>设置连接超时时间</p></div>
+
+<hr>
+
+<a href="../../source/cache/memcache.php.html#line88" class="location">Cache\Memcache.php at line 88</a>
+
+<h3 id="setServer()">setServer</h3>
+<code class="signature">public  void <strong>setServer</strong>(string host)</code>
+<div class="details">
+<p>设置服务器地址</p></div>
+
+<hr>
+
+<a href="../../source/cache/memcache.php.html#line97" class="location">Cache\Memcache.php at line 97</a>
+
+<h3 id="setPort()">setPort</h3>
+<code class="signature">public  void <strong>setPort</strong>(string host, mixed port)</code>
+<div class="details">
+<p>设置端口地址</p></div>
+
+<hr>
+
+<a href="../../source/cache/memcache.php.html#line106" class="location">Cache\Memcache.php at line 106</a>
+
+<h3 id="getAllBlocks()">getAllBlocks</h3>
+<code class="signature">public  array <strong>getAllBlocks</strong>(str prefix)</code>
+<div class="details">
+<p>取出所有缓存块</p></div>
+
+<hr>
+
+<a href="../../source/cache/memcache.php.html#line135" class="location">Cache\Memcache.php at line 135</a>
+
+<h3 id="load()">load</h3>
+<code class="signature">public  mixed <strong>load</strong>(string|int id)</code>
+<div class="details">
+<p>载入缓存块</p></div>
+
+<hr>
+
+<a href="../../source/cache/memcache.php.html#line150" class="location">Cache\Memcache.php at line 150</a>
+
+<h3 id="save()">save</h3>
+<code class="signature">public  mixed <strong>save</strong>(mixed data, mixed exp, mixed id)</code>
+<div class="details">
+<p>保存缓存</p><dl>
+<dt>Parameters:</dt>
+<dd>data - 数据</dd>
+<dd>exp - 有效期</dd>
+<dd>id - 块ID</dd>
+</dl>
+</div>
+
+<hr>
+
+<a href="../../source/cache/memcache.php.html#line163" class="location">Cache\Memcache.php at line 163</a>
+
+<h3 id="delete()">delete</h3>
+<code class="signature">public  bool <strong>delete</strong>(string id)</code>
+<div class="details">
+<p>删除缓存块</p><dl>
+<dt>Parameters:</dt>
+<dd>id - 块ID</dd>
+</dl>
+</div>
+
+<hr>
+
+<a href="../../source/cache/memcache.php.html#line172" class="location">Cache\Memcache.php at line 172</a>
+
+<h3 id="flush()">flush</h3>
+<code class="signature">public  void <strong>flush</strong>()</code>
+<div class="details">
+<p>清空所有缓存</p></div>
+
+<hr>
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="../../suco/cache/package-summary.html">Namespace</a></li>
+<li class="active">Class</li>
+<li><a href="../../suco/cache/package-tree.html">Tree</a></li>
+<li><a href="../../overview-files.html">Files</a></li>
+<li><a href="../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../todo-list.html">Todo</a></li>
+<li><a href="../../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../../index.html" target="_top">Frames</a>
+<a href="../../suco\cache\suco_cache_memcache.html" target="_top">No frames</a>
+</div>
+<div class="small_links">
+Summary: <a href="#summary_field">Field</a> | <a href="#summary_method">Method</a> | <a href="#summary_constr">Constr</a>
+Detail: <a href="#detail_field">Field</a> | <a href="#detail_method">Method</a> | <a href="#summary_constr">Constr</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

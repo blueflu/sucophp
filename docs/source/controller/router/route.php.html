@@ -1,0 +1,349 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:36 +0000">
+
+<link rel="stylesheet" type="text/css" href="../stylesheet.css">
+<link rel="start" href="../overview-summary.html">
+
+<title>Controller\Router\Route.php (SucoPHP API Doc)</title>
+
+</head>
+<body id="file" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\controller\router\route.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<h1>Controller\Router\Route.php</h1>
+<hr>
+
+<a name="line1"></a><pre><?php
+<a name="line2"></a>/**
+<a name="line3"></a> * Suco_Controller_Router_Route 路由类
+<a name="line4"></a> *
+<a name="line5"></a> *
+<a name="line6"></a> * @version		3.0 2009/09/01
+<a name="line7"></a> * @author		Eric Yu (blueflu@live.cn)
+<a name="line8"></a> * @copyright	Copyright (c) 2008, Suconet, Inc.
+<a name="line9"></a> * @license		http://www.suconet.com/license
+<a name="line10"></a> * @package		Controller
+<a name="line11"></a> * -----------------------------------------------------------
+<a name="line12"></a> * 配置实例
+<a name="line13"></a> *
+<a name="line14"></a> * <code>
+<a name="line15"></a> * $route = new Suco_Controller_Router_Route();
+<a name="line16"></a> *
+<a name="line17"></a> * #设置模块路由
+<a name="line18"></a> * $route->addRoute('default', new Suco_Controller_Router_Route_Module(
+<a name="line19"></a> *		':module/:controller/:action/*',
+<a name="line20"></a> *		array(
+<a name="line21"></a> *			#当没有指定相关请求时使用默认值路由
+<a name="line22"></a> *			'defaults' => array(
+<a name="line23"></a> *				'module' => 'default',
+<a name="line24"></a> *				'controller' => 'index',
+<a name="line25"></a> *				'action' => 'default'
+<a name="line26"></a> *		))
+<a name="line27"></a> *	));
+<a name="line28"></a> * #设置正则路由
+<a name="line29"></a> * $route->addRoute('news', new Suco_Controller_Router_Route_Regex(
+<a name="line30"></a> *		'^/news\/(\d+).html', //正向解析
+<a name="line31"></a> *		array(
+<a name="line32"></a> *			//控制器映射
+<a name="line33"></a> *			'defaults' => array(
+<a name="line34"></a> *				'module' => 'default',
+<a name="line35"></a> *				'controller' => 'news',
+<a name="line36"></a> *				'action' => 'detail'
+<a name="line37"></a> *			),
+<a name="line38"></a> *			'mapping' => array(
+<a name="line39"></a> *				1 => 'id',
+<a name="line40"></a> *			),
+<a name="line41"></a> *			'reverse' => 'news/%d.html' //反向解析
+<a name="line42"></a> *		)
+<a name="line43"></a> *	))
+<a name="line44"></a> *
+<a name="line45"></a> * </code>
+<a name="line46"></a> *
+<a name="line47"></a> */
+<a name="line48"></a>
+<a name="line49"></a>require_once 'Suco/Controller/Router/Interface.php';
+<a name="line50"></a>
+<a name="line51"></a>class Suco_Controller_Router_Route implements Suco_Controller_Router_Interface
+<a name="line52"></a>{
+<a name="line53"></a>	const ROUTE_MAPPING 	= 'mapping';
+<a name="line54"></a>	const ROUTE_PATTERN 	= 'pattern';
+<a name="line55"></a>	const ROUTE_REVERSE 	= 'reverse';
+<a name="line56"></a>	const ROUTE_DEFAULTS 	= 'defaults';
+<a name="line57"></a>	const ROUTE_PARAMS		= 'params';
+<a name="line58"></a>
+<a name="line59"></a>	protected $_request;
+<a name="line60"></a>	protected $_routes = array();
+<a name="line61"></a>	protected $_currentRoute;
+<a name="line62"></a>	protected $_delimit = '/';
+<a name="line63"></a>	protected $_domainMapping = array();
+<a name="line64"></a>
+<a name="line65"></a>	/**
+<a name="line66"></a>	 * 参数设置方法
+<a name="line67"></a>	 *
+<a name="line68"></a>	 * @param array $options
+<a name="line69"></a>	 */
+<a name="line70"></a>	public function setOptions($options)
+<a name="line71"></a>	{
+<a name="line72"></a>		foreach ($options as $key => $option) {
+<a name="line73"></a>			$method = 'set' . ucfirst($key);
+<a name="line74"></a>			$this->$method($option);
+<a name="line75"></a>		}
+<a name="line76"></a>	}
+<a name="line77"></a>
+<a name="line78"></a>	/**
+<a name="line79"></a>	 * 设置路由
+<a name="line80"></a>	 *
+<a name="line81"></a>	 * @param object $routes
+<a name="line82"></a>	 * @return void
+<a name="line83"></a>	 */
+<a name="line84"></a>	public function setRoutes($routes)
+<a name="line85"></a>	{
+<a name="line86"></a>		foreach ($routes as $name => $route) {
+<a name="line87"></a>			$this->addRoute($name, $route);
+<a name="line88"></a>		}
+<a name="line89"></a>	}
+<a name="line90"></a>
+<a name="line91"></a>	/**
+<a name="line92"></a>	 * 返回路由
+<a name="line93"></a>	 *
+<a name="line94"></a>	 * @return array
+<a name="line95"></a>	 */
+<a name="line96"></a>	public function getRoutes()
+<a name="line97"></a>	{
+<a name="line98"></a>		return $this->_routes;
+<a name="line99"></a>	}
+<a name="line100"></a>
+<a name="line101"></a>	/**
+<a name="line102"></a>	 * 设置请求对象
+<a name="line103"></a>	 *
+<a name="line104"></a>	 * @param object $request
+<a name="line105"></a>	 * @return object
+<a name="line106"></a>	 */
+<a name="line107"></a>	public function setRequest(Suco_Controller_Request_Interface $request)
+<a name="line108"></a>	{
+<a name="line109"></a>		$this->_request = $request;
+<a name="line110"></a>	}
+<a name="line111"></a>
+<a name="line112"></a>	/**
+<a name="line113"></a>	 * 返回请求对象
+<a name="line114"></a>	 *
+<a name="line115"></a>	 * @param array $options
+<a name="line116"></a>	 */
+<a name="line117"></a>	public function getRequest()
+<a name="line118"></a>	{
+<a name="line119"></a>		return $this->_request;
+<a name="line120"></a>	}
+<a name="line121"></a>
+<a name="line122"></a>	/**
+<a name="line123"></a>	 * 设置域路由
+<a name="line124"></a>	 *
+<a name="line125"></a>	 * @param array $mapping
+<a name="line126"></a>	 * @return object
+<a name="line127"></a>	 */
+<a name="line128"></a>	public function setDomainMapping($mapping)
+<a name="line129"></a>	{
+<a name="line130"></a>		$this->_domainMapping = $mapping;
+<a name="line131"></a>		return $this;
+<a name="line132"></a>	}
+<a name="line133"></a>
+<a name="line134"></a>	/**
+<a name="line135"></a>	 * 返回域路由
+<a name="line136"></a>	 *
+<a name="line137"></a>	 * @return array
+<a name="line138"></a>	 */
+<a name="line139"></a>	public function getDomainMapping()
+<a name="line140"></a>	{
+<a name="line141"></a>		return $this->_domainMapping;
+<a name="line142"></a>	}
+<a name="line143"></a>
+<a name="line144"></a>	/**
+<a name="line145"></a>	 * 添加路由规则
+<a name="line146"></a>	 *
+<a name="line147"></a>	 * @param string $name
+<a name="line148"></a>	 * @param object $route
+<a name="line149"></a>	 * @return object
+<a name="line150"></a>	 */
+<a name="line151"></a>	public function addRoute($name, $route)
+<a name="line152"></a>	{
+<a name="line153"></a>		if (is_array($route)) {
+<a name="line154"></a>			$file = $adapter = ucfirst($route['type']);
+<a name="line155"></a>			$adapter = 'Suco_Controller_Router_Route_'.$adapter;
+<a name="line156"></a>			$match = $route['match'];
+<a name="line157"></a>			require_once 'Route/'.str_replace('_', '/', $file) . '.php';
+<a name="line158"></a>			$this->_routes[$name] = new $adapter($match, $route);
+<a name="line159"></a>		} elseif ($route instanceof Suco_Controller_Router_Route_Abstract) {
+<a name="line160"></a>			$this->_routes[$name] = $route;
+<a name="line161"></a>		} else {
+<a name="line162"></a>			require_once 'Suco/Controller/Router/Exception.php';
+<a name="line163"></a>			throw new Suco_Controller_Router_Exception('无效设置');
+<a name="line164"></a>		}
+<a name="line165"></a>		return $this;
+<a name="line166"></a>	}
+<a name="line167"></a>
+<a name="line168"></a>	/**
+<a name="line169"></a>	 * 移除路由规则
+<a name="line170"></a>	 *
+<a name="line171"></a>	 * @param string $name
+<a name="line172"></a>	 * @return void
+<a name="line173"></a>	 */
+<a name="line174"></a>	public function removeRoute($name)
+<a name="line175"></a>	{
+<a name="line176"></a>		unset($this->_routes[$name]);
+<a name="line177"></a>	}
+<a name="line178"></a>
+<a name="line179"></a>	/**
+<a name="line180"></a>	 * 清空路由规则
+<a name="line181"></a>	 *
+<a name="line182"></a>	 * @return void
+<a name="line183"></a>	 */
+<a name="line184"></a>	public function clearRoute()
+<a name="line185"></a>	{
+<a name="line186"></a>		$this->_routes = array();
+<a name="line187"></a>	}
+<a name="line188"></a>
+<a name="line189"></a>	/**
+<a name="line190"></a>	 * 正向路由
+<a name="line191"></a>	 *
+<a name="line192"></a>	 * @return void
+<a name="line193"></a>	 */
+<a name="line194"></a>	public function routing()
+<a name="line195"></a>	{
+<a name="line196"></a>		$this->_request->setRouter($this);
+<a name="line197"></a>
+<a name="line198"></a>		$routes = array_reverse($this->_routes);
+<a name="line199"></a>		foreach ($routes as $name => $route) {
+<a name="line200"></a>			if ($params = $route->match($this->_request->getPathInfo())) {
+<a name="line201"></a>				if ($this->_domainMapping) {
+<a name="line202"></a>					$host = $this->_request->getHost();
+<a name="line203"></a>					if (isset($this->_domainMapping[$host])) {
+<a name="line204"></a>						$params[$this->_request->getModuleKey()] = $this->_domainMapping[$host];
+<a name="line205"></a>					}
+<a name="line206"></a>				}
+<a name="line207"></a>				$this->_currentRoute = $name;
+<a name="line208"></a>				$this->_request->setQuerys($params);
+<a name="line209"></a>				return;
+<a name="line210"></a>			}
+<a name="line211"></a>		}
+<a name="line212"></a>	}
+<a name="line213"></a>
+<a name="line214"></a>	/**
+<a name="line215"></a>	 * 反向路由
+<a name="line216"></a>	 *
+<a name="line217"></a>	 * @param string|array $querys 查询请求
+<a name="line218"></a>	 * @param string $name 指定路由对象
+<a name="line219"></a>	 * @return void
+<a name="line220"></a>	 */
+<a name="line221"></a>	public function reverse($querys, $name = null)
+<a name="line222"></a>	{
+<a name="line223"></a>		if (!$querys) {
+<a name="line224"></a>			return null;
+<a name="line225"></a>		} elseif (is_string($querys) && strpos($querys, $this->_delimit) !== false) { //已经转换
+<a name="line226"></a>			return $querys;
+<a name="line227"></a>		} elseif (!is_array($querys)) {
+<a name="line228"></a>			parse_str($querys, $options);
+<a name="line229"></a>		}
+<a name="line230"></a>
+<a name="line231"></a>		$moduleKey = $this->_request->getModuleKey();
+<a name="line232"></a>		$controllerKey = $this->_request->getControllerKey();
+<a name="line233"></a>		$actionKey = $this->_request->getActionKey();
+<a name="line234"></a>
+<a name="line235"></a>		//如果链接是以&开头的.则为追加查询参数
+<a name="line236"></a>		if (is_string($querys) && substr($querys, 0, 1) == '&') {
+<a name="line237"></a>			$options = array_merge($this->_request->getQuerys(), array(
+<a name="line238"></a>				$moduleKey => $this->_request->getModuleName(),
+<a name="line239"></a>				$controllerKey => $this->_request->getControllerName(),
+<a name="line240"></a>				$actionKey => $this->_request->getActionName(),
+<a name="line241"></a>			), $options);
+<a name="line242"></a>		}
+<a name="line243"></a>
+<a name="line244"></a>    	//补齐URL
+<a name="line245"></a>    	if (isset($options[$controllerKey]) && !isset($options[$moduleKey])) {
+<a name="line246"></a>    		$options[$moduleKey] = $this->_request->getModuleName();
+<a name="line247"></a>    	}
+<a name="line248"></a>    	if (isset($options[$actionKey]) && !isset($options[$controllerKey])) {
+<a name="line249"></a>    		$options[$moduleKey] = $this->_request->getModuleName();
+<a name="line250"></a>    		$options[$controllerKey] = $this->_request->getControllerName();
+<a name="line251"></a>    	}
+<a name="line252"></a>
+<a name="line253"></a>    	$options = array_merge(array($moduleKey => '', $controllerKey => '', $actionKey => ''), $options);
+<a name="line254"></a>    	$routes = array_reverse($this->_routes);
+<a name="line255"></a>		$baseUrl = Suco_Application::instance()->getRequest()->getHost()
+<a name="line256"></a>			. Suco_Application::instance()->getRequest()->getBaseUrl();
+<a name="line257"></a>		if ($this->_domainMapping) {
+<a name="line258"></a>			$module = $options[$moduleKey];
+<a name="line259"></a>			foreach ($this->_domainMapping as $host => $mod) {
+<a name="line260"></a>				if ($mod == $module) {
+<a name="line261"></a>					$baseUrl = "http://" . $host
+<a name="line262"></a>						. Suco_Application::instance()->getRequest()->getBaseUrl();
+<a name="line263"></a>					break;
+<a name="line264"></a>				}
+<a name="line265"></a>			}
+<a name="line266"></a>		}
+<a name="line267"></a>
+<a name="line268"></a>    	if (isset($routes[$name])) {
+<a name="line269"></a>    		if ($url = $routes[$name]->reverseMatch($options)) {
+<a name="line270"></a>				$url == '/' && $url = '';
+<a name="line271"></a>				return trim($baseUrl, '/') . '/' . $url;
+<a name="line272"></a>			}
+<a name="line273"></a>    	} else {
+<a name="line274"></a>			foreach ($routes as $name => $route) {
+<a name="line275"></a>				if ($url = $route->reverseMatch($options)) {
+<a name="line276"></a>					$url == '/' && $url = '';
+<a name="line277"></a>					return trim($baseUrl, '/') . '/' . $url;
+<a name="line278"></a>				}
+<a name="line279"></a>			}
+<a name="line280"></a>    	}
+<a name="line281"></a>
+<a name="line282"></a>		foreach ($options as $key => $val) {
+<a name="line283"></a>			if (empty($val)) {
+<a name="line284"></a>				unset($options[$key]);
+<a name="line285"></a>			}
+<a name="line286"></a>		}
+<a name="line287"></a>		return '?' . http_build_query($options);
+<a name="line288"></a>	}
+<a name="line289"></a>}</pre>
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\controller\router\route.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

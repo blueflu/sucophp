@@ -1,0 +1,229 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:36 +0000">
+
+<link rel="stylesheet" type="text/css" href="../stylesheet.css">
+<link rel="start" href="../overview-summary.html">
+
+<title>Config\Ini.php (SucoPHP API Doc)</title>
+
+</head>
+<body id="file" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\config\ini.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<h1>Config\Ini.php</h1>
+<hr>
+
+<a name="line1"></a><pre><?php
+<a name="line2"></a>
+<a name="line3"></a>/**
+<a name="line4"></a> * Suco_Config_Ini Ini 配置文件解析类
+<a name="line5"></a> *
+<a name="line6"></a> * @version		3.0 2009/09/01
+<a name="line7"></a> * @author		Eric Yu (blueflu@live.cn)
+<a name="line8"></a> * @copyright	Copyright (c) 2009, Suconet, Inc.
+<a name="line9"></a> * @package		Config
+<a name="line10"></a> * @license		http://www.suconet.com/license
+<a name="line11"></a> * -----------------------------------------------------------
+<a name="line12"></a> */
+<a name="line13"></a>
+<a name="line14"></a>class Suco_Config_Ini extends Suco_Object implements Suco_Config_Interface
+<a name="line15"></a>{
+<a name="line16"></a>	/**
+<a name="line17"></a>	 * 配置文件路径
+<a name="line18"></a>	 * @var string
+<a name="line19"></a>	 */
+<a name="line20"></a>	protected $_file;
+<a name="line21"></a>	/**
+<a name="line22"></a>	 * 键值分割符
+<a name="line23"></a>	 * @var string
+<a name="line24"></a>	 */
+<a name="line25"></a>	protected $_extendSeparator = ':';
+<a name="line26"></a>	/**
+<a name="line27"></a>	 * 数组分割符
+<a name="line28"></a>	 * @var string
+<a name="line29"></a>	 */
+<a name="line30"></a>	protected $_arraySeparator = '.';
+<a name="line31"></a>
+<a name="line32"></a>	/**
+<a name="line33"></a>	 * 处理键名
+<a name="line34"></a>	 *
+<a name="line35"></a>	 * @param array $config
+<a name="line36"></a>	 * @param string $key
+<a name="line37"></a>	 * @param mixed $val
+<a name="line38"></a>	 * @return array
+<a name="line39"></a>	 */
+<a name="line40"></a>	protected function _processKey($config, $key, $val)
+<a name="line41"></a>	{
+<a name="line42"></a>		if (strpos($key, $this->_arraySeparator) !== false) {
+<a name="line43"></a>			$pieces = explode($this->_arraySeparator, $key, 2);
+<a name="line44"></a>			if (!isset($config[$pieces[0]])) {
+<a name="line45"></a>				if ($pieces[0] === '0' && !empty($config)) {
+<a name="line46"></a>					$config = array($pieces[0] => $config);
+<a name="line47"></a>				} else {
+<a name="line48"></a>					$config[$pieces[0]] = array();
+<a name="line49"></a>				}
+<a name="line50"></a>			}
+<a name="line51"></a>			$config[$pieces[0]] = $this->_processKey($config[$pieces[0]], $pieces[1], $val);
+<a name="line52"></a>		} else {
+<a name="line53"></a>			$config[$key] = $val;
+<a name="line54"></a>		}
+<a name="line55"></a>		return $config;
+<a name="line56"></a>	}
+<a name="line57"></a>
+<a name="line58"></a>	/**
+<a name="line59"></a>	 * 解析配置文件
+<a name="line60"></a>	 * @param string $file
+<a name="line61"></a>	 * @return array
+<a name="line62"></a>	 */
+<a name="line63"></a>	protected function _parse($file)
+<a name="line64"></a>	{
+<a name="line65"></a>		$iniArray = parse_ini_file($file, true);
+<a name="line66"></a>
+<a name="line67"></a>		$data = array(); $arr = array();
+<a name="line68"></a>		foreach ($iniArray as $key => $value) {
+<a name="line69"></a>			if (!is_array($value)) {
+<a name="line70"></a>				$data[$key] = $value;
+<a name="line71"></a>				continue;
+<a name="line72"></a>			}
+<a name="line73"></a>
+<a name="line74"></a>			$arr = array();
+<a name="line75"></a>			foreach ($value as $k => $v) {
+<a name="line76"></a>				$arr = array_merge_recursive($arr, $this->_processKey(array(), $k, $v));
+<a name="line77"></a>			}
+<a name="line78"></a>
+<a name="line79"></a>			$iniArray[$key] = $value = $arr ? $arr : $value;
+<a name="line80"></a>			$keys = explode($this->_extendSeparator, $key);
+<a name="line81"></a>			switch (count($keys)) {
+<a name="line82"></a>				case 1:
+<a name="line83"></a>					$data[$keys[0]] = $value;
+<a name="line84"></a>					break;
+<a name="line85"></a>				case 2:
+<a name="line86"></a>					$data['_extends'][$keys[1]] = array_merge($data[$keys[0]], $iniArray[$key]);
+<a name="line87"></a>					break;
+<a name="line88"></a>			}
+<a name="line89"></a>		}
+<a name="line90"></a>		return $data;
+<a name="line91"></a>	}
+<a name="line92"></a>
+<a name="line93"></a>	/**
+<a name="line94"></a>	 * 格式化配置文本
+<a name="line95"></a>	 * @param array $array
+<a name="line96"></a>	 * @return void
+<a name="line97"></a>	 */
+<a name="line98"></a>	protected function _formatText($array)
+<a name="line99"></a>	{
+<a name="line100"></a>		$string = '';
+<a name="line101"></a>		foreach ((array)$array as $key => $row) {
+<a name="line102"></a>			if (!is_array($row)) {
+<a name="line103"></a>				$string .= "{$key} = {$row}\r\n";
+<a name="line104"></a>				unset($array[$key]);
+<a name="line105"></a>			}
+<a name="line106"></a>		}
+<a name="line107"></a>
+<a name="line108"></a>		//将数组置后
+<a name="line109"></a>		foreach ((array)$array as $key => $row) {
+<a name="line110"></a>			$string .= "[{$key}]\r\n";
+<a name="line111"></a>			$string .= $this->_formatText($row) . "\r\n";
+<a name="line112"></a>		}
+<a name="line113"></a>		return $string;
+<a name="line114"></a>	}
+<a name="line115"></a>
+<a name="line116"></a>	/**
+<a name="line117"></a>	 * 导入配置数组
+<a name="line118"></a>	 *
+<a name="line119"></a>	 * @param array $array
+<a name="line120"></a>	 * @return void
+<a name="line121"></a>	 */
+<a name="line122"></a>	public function import($array)
+<a name="line123"></a>	{
+<a name="line124"></a>		foreach ($array as $key => $val) {
+<a name="line125"></a>			$this->set($key, $val);
+<a name="line126"></a>		}
+<a name="line127"></a>	}
+<a name="line128"></a>
+<a name="line129"></a>	/**
+<a name="line130"></a>	 * 清空所以配置
+<a name="line131"></a>	 *
+<a name="line132"></a>	 * @return void
+<a name="line133"></a>	 */
+<a name="line134"></a>	public function clean()
+<a name="line135"></a>	{
+<a name="line136"></a>		$this->_data = array();
+<a name="line137"></a>	}
+<a name="line138"></a>
+<a name="line139"></a>	/**
+<a name="line140"></a>	 * 保存配置到指定文件
+<a name="line141"></a>	 * @param string $file	为空以当前文件名保存
+<a name="line142"></a>	 * @return void
+<a name="line143"></a>	 */
+<a name="line144"></a>	public function save($file = null)
+<a name="line145"></a>	{
+<a name="line146"></a>		$file = $file ? $file : $this->_file;
+<a name="line147"></a>		file_put_contents($file, $this->_formatText($this->toArray()));
+<a name="line148"></a>	}
+<a name="line149"></a>
+<a name="line150"></a>	/**
+<a name="line151"></a>	 * 载入并解析配置文件
+<a name="line152"></a>	 * @param string $file	为空以当前文件名保存
+<a name="line153"></a>	 * @return void
+<a name="line154"></a>	 */
+<a name="line155"></a>	public function load($file)
+<a name="line156"></a>	{
+<a name="line157"></a>		if (!is_file($file)) {
+<a name="line158"></a>			require_once 'Suco/Config/Exception.php';
+<a name="line159"></a>			throw new Suco_Config_Exception("找不到配置文件 {$file}");
+<a name="line160"></a>		}
+<a name="line161"></a>
+<a name="line162"></a>		$this->_file = realpath($file);
+<a name="line163"></a>		$data = $this->_parse($file);
+<a name="line164"></a>		$this->import($data);
+<a name="line165"></a>
+<a name="line166"></a>		return $this;
+<a name="line167"></a>	}
+<a name="line168"></a>
+<a name="line169"></a>}</pre>
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../overview-summary.html">Overview</a></li>
+<li>Package</li><li>Class</li><li>Tree</li><li><a href="../overview-files.html">Files</a></li>
+<li><a href="../deprecated-list.html">Deprecated</a></li>
+<li><a href="../todo-list.html">Todo</a></li>
+<li><a href="../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../index.html" target="_top">Frames</a>
+<a href="../source\config\ini.php.html" target="_top">No frames</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

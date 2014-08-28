@@ -1,0 +1,321 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:34 +0000">
+
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css">
+<link rel="start" href="../../overview-summary.html">
+
+<title>Suco_Object (SucoPHP API Doc)</title>
+
+</head>
+<body id="definition" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="../../suco//package-summary.html">Namespace</a></li>
+<li class="active">Class</li>
+<li><a href="../../suco//package-tree.html">Tree</a></li>
+<li><a href="../../overview-files.html">Files</a></li>
+<li><a href="../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../todo-list.html">Todo</a></li>
+<li><a href="../../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../../index.html" target="_top">Frames</a>
+<a href="../../suco\\suco_object.html" target="_top">No frames</a>
+</div>
+<div class="small_links">
+Summary: <a href="#summary_field">Field</a> | <a href="#summary_method">Method</a> | <a href="#summary_constr">Constr</a>
+Detail: <a href="#detail_field">Field</a> | <a href="#detail_method">Method</a> | <a href="#summary_constr">Constr</a>
+</div>
+<hr>
+
+<div class="qualifiedName">Suco\\Suco_Object</div>
+<a href="../../source/object.php.html#line13" class="location">Object.php at line 13</a>
+
+<h1>Class Suco_Object</h1>
+
+<pre class="tree"><strong>Suco_Object</strong><br /></pre>
+
+<dl>
+<dt>All Known Subclasses:</dt>
+<dd><a href="../../suco/config/suco_config_ini.html">Suco\Config\Suco_Config_Ini</a> <a href="../../suco/config/suco_config_json.html">Suco\Config\Suco_Config_Json</a> <a href="../../suco/config/suco_config_php.html">Suco\Config\Suco_Config_Php</a> <a href="../../suco/db/table/suco_db_table_row.html">Suco\Db\Table\Suco_Db_Table_Row</a> <a href="../../suco/db/table/suco_db_table_rowset.html">Suco\Db\Table\Suco_Db_Table_Rowset</a> </dd>
+</dl>
+
+<hr>
+
+<p class="signature">public  class <strong>Suco_Object</strong></p>
+
+<div class="comment" id="overview_description"><p>Suco_Object 对象类</p></div>
+
+<dl>
+<dt>Version:</dt>
+<dd>3.0 2009/09/01</dd>
+<dt>Author:</dt>
+<dd>Eric Yu (blueflu@live.cn)</dd>
+<dt>Copyright:</dt>
+<dd>Copyright (c) 2009, Suconet, Inc.</dd>
+<dt>License:</dt>
+<dd>http://www.suconet.com/license -----------------------------------------------------------</dd>
+</dl>
+<hr>
+
+<table id="summary_constructor">
+<tr><th colspan="2">Constructor Summary</th></tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#__construct()">__construct</a>(array data)</p><p class="description">构造函数</p></td>
+</tr>
+</table>
+
+<table id="summary_method">
+<tr><th colspan="2">Method Summary</th></tr>
+<tr>
+<td class="type"> object</td>
+<td class="description"><p class="name"><a href="#set()">set</a>(string key, mixed value)</p><p class="description">设置一项数据</p></td>
+</tr>
+<tr>
+<td class="type"> mixed</td>
+<td class="description"><p class="name"><a href="#get()">get</a>(string key)</p><p class="description">返回一项数据</p></td>
+</tr>
+<tr>
+<td class="type"> array</td>
+<td class="description"><p class="name"><a href="#toArray()">toArray</a>()</p><p class="description">将对象转为数组</p></td>
+</tr>
+<tr>
+<td class="type"> string</td>
+<td class="description"><p class="name"><a href="#toJson()">toJson</a>()</p><p class="description">将对象转为JSON</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#offsetSet()">offsetSet</a>(string offset, mixed value)</p><p class="description">ArrayAccess 数组式访问 接口方法</p></td>
+</tr>
+<tr>
+<td class="type"> mixed</td>
+<td class="description"><p class="name"><a href="#offsetGet()">offsetGet</a>(string offset)</p><p class="description">ArrayAccess 数组式访问 接口方法</p></td>
+</tr>
+<tr>
+<td class="type"> bool</td>
+<td class="description"><p class="name"><a href="#offsetExists()">offsetExists</a>(string offset)</p><p class="description">ArrayAccess 数组式访问 接口方法</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#offsetUnset()">offsetUnset</a>(string offset)</p><p class="description">ArrayAccess 数组式访问 接口方法</p></td>
+</tr>
+<tr>
+<td class="type"> mixed</td>
+<td class="description"><p class="name"><a href="#current()">current</a>()</p><p class="description">Iterator 迭代器 接口方法</p></td>
+</tr>
+<tr>
+<td class="type"> scalar</td>
+<td class="description"><p class="name"><a href="#key()">key</a>()</p><p class="description">Iterator 迭代器 接口方法</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#next()">next</a>()</p><p class="description">Iterator 迭代器 接口方法</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#rewind()">rewind</a>()</p><p class="description">Iterator 迭代器 接口方法</p></td>
+</tr>
+<tr>
+<td class="type"> boolean</td>
+<td class="description"><p class="name"><a href="#valid()">valid</a>()</p><p class="description">Iterator 迭代器 接口方法</p></td>
+</tr>
+<tr>
+<td class="type"> int</td>
+<td class="description"><p class="name"><a href="#count()">count</a>()</p><p class="description">Countable 统计 接口方法</p></td>
+</tr>
+</table>
+
+<h2 id="detail_method">Constructor Detail</h2>
+<a href="../../source/object.php.html#line35" class="location">Object.php at line 35</a>
+
+<h3 id="__construct()">__construct</h3>
+<code class="signature">public  void <strong>__construct</strong>(array data)</code>
+<div class="details">
+<p>构造函数</p></div>
+
+<hr>
+
+<h2 id="detail_method">Method Detail</h2>
+<a href="../../source/object.php.html#line92" class="location">Object.php at line 92</a>
+
+<h3 id="set()">set</h3>
+<code class="signature">public  object <strong>set</strong>(string key, mixed value)</code>
+<div class="details">
+<p>设置一项数据</p><dl>
+<dt>Parameters:</dt>
+<dd>key - 键</dd>
+<dd>value - 值</dd>
+<dt>Returns:</dt>
+<dd>当前类</dd>
+</dl>
+</div>
+
+<hr>
+
+<a href="../../source/object.php.html#line103" class="location">Object.php at line 103</a>
+
+<h3 id="get()">get</h3>
+<code class="signature">public  mixed <strong>get</strong>(string key)</code>
+<div class="details">
+<p>返回一项数据</p><dl>
+<dt>Parameters:</dt>
+<dd>key - 键</dd>
+</dl>
+</div>
+
+<hr>
+
+<a href="../../source/object.php.html#line113" class="location">Object.php at line 113</a>
+
+<h3 id="toArray()">toArray</h3>
+<code class="signature">public  array <strong>toArray</strong>()</code>
+<div class="details">
+<p>将对象转为数组</p></div>
+
+<hr>
+
+<a href="../../source/object.php.html#line123" class="location">Object.php at line 123</a>
+
+<h3 id="toJson()">toJson</h3>
+<code class="signature">public  string <strong>toJson</strong>()</code>
+<div class="details">
+<p>将对象转为JSON</p><dl>
+<dt>Returns:</dt>
+<dd>JSON格式</dd>
+</dl>
+</div>
+
+<hr>
+
+<a href="../../source/object.php.html#line135" class="location">Object.php at line 135</a>
+
+<h3 id="offsetSet()">offsetSet</h3>
+<code class="signature">public  void <strong>offsetSet</strong>(string offset, mixed value)</code>
+<div class="details">
+<p>ArrayAccess 数组式访问 接口方法</p></div>
+
+<hr>
+
+<a href="../../source/object.php.html#line146" class="location">Object.php at line 146</a>
+
+<h3 id="offsetGet()">offsetGet</h3>
+<code class="signature">public  mixed <strong>offsetGet</strong>(string offset)</code>
+<div class="details">
+<p>ArrayAccess 数组式访问 接口方法</p></div>
+
+<hr>
+
+<a href="../../source/object.php.html#line157" class="location">Object.php at line 157</a>
+
+<h3 id="offsetExists()">offsetExists</h3>
+<code class="signature">public  bool <strong>offsetExists</strong>(string offset)</code>
+<div class="details">
+<p>ArrayAccess 数组式访问 接口方法</p></div>
+
+<hr>
+
+<a href="../../source/object.php.html#line168" class="location">Object.php at line 168</a>
+
+<h3 id="offsetUnset()">offsetUnset</h3>
+<code class="signature">public  void <strong>offsetUnset</strong>(string offset)</code>
+<div class="details">
+<p>ArrayAccess 数组式访问 接口方法</p></div>
+
+<hr>
+
+<a href="../../source/object.php.html#line178" class="location">Object.php at line 178</a>
+
+<h3 id="current()">current</h3>
+<code class="signature">public  mixed <strong>current</strong>()</code>
+<div class="details">
+<p>Iterator 迭代器 接口方法</p></div>
+
+<hr>
+
+<a href="../../source/object.php.html#line188" class="location">Object.php at line 188</a>
+
+<h3 id="key()">key</h3>
+<code class="signature">public  scalar <strong>key</strong>()</code>
+<div class="details">
+<p>Iterator 迭代器 接口方法</p></div>
+
+<hr>
+
+<a href="../../source/object.php.html#line198" class="location">Object.php at line 198</a>
+
+<h3 id="next()">next</h3>
+<code class="signature">public  void <strong>next</strong>()</code>
+<div class="details">
+<p>Iterator 迭代器 接口方法</p></div>
+
+<hr>
+
+<a href="../../source/object.php.html#line208" class="location">Object.php at line 208</a>
+
+<h3 id="rewind()">rewind</h3>
+<code class="signature">public  void <strong>rewind</strong>()</code>
+<div class="details">
+<p>Iterator 迭代器 接口方法</p></div>
+
+<hr>
+
+<a href="../../source/object.php.html#line218" class="location">Object.php at line 218</a>
+
+<h3 id="valid()">valid</h3>
+<code class="signature">public  boolean <strong>valid</strong>()</code>
+<div class="details">
+<p>Iterator 迭代器 接口方法</p></div>
+
+<hr>
+
+<a href="../../source/object.php.html#line228" class="location">Object.php at line 228</a>
+
+<h3 id="count()">count</h3>
+<code class="signature">public  int <strong>count</strong>()</code>
+<div class="details">
+<p>Countable 统计 接口方法</p></div>
+
+<hr>
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="../../suco//package-summary.html">Namespace</a></li>
+<li class="active">Class</li>
+<li><a href="../../suco//package-tree.html">Tree</a></li>
+<li><a href="../../overview-files.html">Files</a></li>
+<li><a href="../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../todo-list.html">Todo</a></li>
+<li><a href="../../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../../index.html" target="_top">Frames</a>
+<a href="../../suco\\suco_object.html" target="_top">No frames</a>
+</div>
+<div class="small_links">
+Summary: <a href="#summary_field">Field</a> | <a href="#summary_method">Method</a> | <a href="#summary_constr">Constr</a>
+Detail: <a href="#detail_field">Field</a> | <a href="#detail_method">Method</a> | <a href="#summary_constr">Constr</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

@@ -1,0 +1,185 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:35 +0000">
+
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css">
+<link rel="start" href="../../overview-summary.html">
+
+<title>Suco_Db_Table (SucoPHP API Doc)</title>
+
+</head>
+<body id="definition" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="../../suco/db/package-summary.html">Namespace</a></li>
+<li class="active">Class</li>
+<li><a href="../../suco/db/package-tree.html">Tree</a></li>
+<li><a href="../../overview-files.html">Files</a></li>
+<li><a href="../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../todo-list.html">Todo</a></li>
+<li><a href="../../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../../index.html" target="_top">Frames</a>
+<a href="../../suco\db\suco_db_table.html" target="_top">No frames</a>
+</div>
+<div class="small_links">
+Summary: <a href="#summary_field">Field</a> | <a href="#summary_method">Method</a> | <a href="#summary_constr">Constr</a>
+Detail: <a href="#detail_field">Field</a> | <a href="#detail_method">Method</a> | <a href="#summary_constr">Constr</a>
+</div>
+<hr>
+
+<div class="qualifiedName">Suco\Db\Suco_Db_Table</div>
+<a href="../../source/db/table.php.html#line14" class="location">Db\Table.php at line 14</a>
+
+<h1>Class Suco_Db_Table</h1>
+
+<pre class="tree"><a href="../../suco/db/table/suco_db_table_abstract.html">Suco_Db_Table_Abstract</a><br>    └─<strong>Suco_Db_Table</strong><br /></pre>
+
+<hr>
+
+<p class="signature">public  class <strong>Suco_Db_Table</strong><br>extends <a href="../../suco/db/table/suco_db_table_abstract.html">Suco_Db_Table_Abstract</a>
+
+</p>
+
+<div class="comment" id="overview_description"><p>Suco_Db_Table 表操作业务封装</p></div>
+
+<dl>
+<dt>Version:</dt>
+<dd>3.0 2009/09/01</dd>
+<dt>Author:</dt>
+<dd>Eric Yu (blueflu@live.cn)</dd>
+<dt>Copyright:</dt>
+<dd>Copyright (c) 2008, Suconet, Inc.</dd>
+<dt>License:</dt>
+<dd>http://www.suconet.com/license</dd>
+</dl>
+<hr>
+
+<table id="summary_method">
+<tr><th colspan="2">Method Summary</th></tr>
+<tr>
+<td class="type">static  void</td>
+<td class="description"><p class="name"><a href="#setDefaultAdapter()">setDefaultAdapter</a>(object adapter)</p><p class="description">设置默认数据库适配器</p></td>
+</tr>
+<tr>
+<td class="type">static  object</td>
+<td class="description"><p class="name"><a href="#getDefaultAdapter()">getDefaultAdapter</a>()</p><p class="description">返回默认数据库适配器</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setAdapter()">setAdapter</a>(object adapter)</p><p class="description">设置数据库适配器</p></td>
+</tr>
+<tr>
+<td class="type"> $adapter</td>
+<td class="description"><p class="name"><a href="#getAdapter()">getAdapter</a>()</p><p class="description">返回数据库适配器</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#addTrigger()">addTrigger</a>(mixed trigger)</p><p class="description">添加一个触发器</p></td>
+</tr>
+<tr>
+<td class="type"> object</td>
+<td class="description"><p class="name"><a href="#getTriggers()">getTriggers</a>()</p><p class="description">返回所有触发器</p></td>
+</tr>
+</table>
+
+<table class="inherit">
+<tr><th colspan="2">Methods inherited from Suco\Db\Table\Suco_Db_Table_Abstract</th></tr>
+<tr><td><a href="../../suco/db/table/suco_db_table_abstract.html#__construct()">__construct</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#alias()">alias</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#count()">count</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#create()">create</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#delete()">delete</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#deleteById()">deleteById</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#fetchAll()">fetchAll</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#fetchCol()">fetchCol</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#fetchCols()">fetchCols</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#fetchOnKey()">fetchOnKey</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#fetchRow()">fetchRow</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#fetchRows()">fetchRows</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#filter()">filter</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#getById()">getById</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#getColumns()">getColumns</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#getDefaultValues()">getDefaultValues</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#getIdentity()">getIdentity</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#getInsertId()">getInsertId</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#getMetadata()">getMetadata</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#getName()">getName</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#getNoModifyColumns()">getNoModifyColumns</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#getReferenceMap()">getReferenceMap</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#getRowClass()">getRowClass</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#getRowsetClass()">getRowsetClass</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#getSchema()">getSchema</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#getTableName()">getTableName</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#getUniqueCode()">getUniqueCode</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#init()">init</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#inputFilter()">inputFilter</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#insert()">insert</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#insertFilter()">insertFilter</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#outputFilter()">outputFilter</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#quoteInto()">quoteInto</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#select()">select</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#setColumns()">setColumns</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#setDefaultValues()">setDefaultValues</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#setIdentity()">setIdentity</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#setMetadata()">setMetadata</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#setName()">setName</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#setNoModifyColumns()">setNoModifyColumns</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#setOptions()">setOptions</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#setReferenceMap()">setReferenceMap</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#setRowClass()">setRowClass</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#setRowsetClass()">setRowsetClass</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#setSchema()">setSchema</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#update()">update</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#updateById()">updateById</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#updateFilter()">updateFilter</a>, <a href="../../suco/db/table/suco_db_table_abstract.html#validation()">validation</a></td></tr></table>
+
+<h2 id="detail_method">Method Detail</h2>
+<a href="../../source/db/table.php.html#line20" class="location">Db\Table.php at line 20</a>
+
+<h3 id="setDefaultAdapter()">setDefaultAdapter</h3>
+<code class="signature">public static  void <strong>setDefaultAdapter</strong>(object adapter)</code>
+<div class="details">
+<p>设置默认数据库适配器</p></div>
+
+<hr>
+
+<a href="../../source/db/table.php.html#line29" class="location">Db\Table.php at line 29</a>
+
+<h3 id="getDefaultAdapter()">getDefaultAdapter</h3>
+<code class="signature">public static  object <strong>getDefaultAdapter</strong>()</code>
+<div class="details">
+<p>返回默认数据库适配器</p></div>
+
+<hr>
+
+<a href="../../source/db/table.php.html#line39" class="location">Db\Table.php at line 39</a>
+
+<h3 id="setAdapter()">setAdapter</h3>
+<code class="signature">public  void <strong>setAdapter</strong>(object adapter)</code>
+<div class="details">
+<p>设置数据库适配器</p></div>
+
+<hr>
+
+<a href="../../source/db/table.php.html#line48" class="location">Db\Table.php at line 48</a>
+
+<h3 id="getAdapter()">getAdapter</h3>
+<code class="signature">public  $adapter <strong>getAdapter</strong>()</code>
+<div class="details">
+<p>返回数据库适配器</p></div>
+
+<hr>
+
+<a href="../../source/db/table.php.html#line61" class="location">Db\Table.php at line 61</a>
+
+<h3 id="addTrigger()">addTrigger</h3>
+<code class="signature">public  void <strong>addTrigger</strong>(mixed trigger)</code>
+<div class="details">
+<p>添加一个触发器</p></div>
+
+<hr>
+
+<a href="../../source/db/table.php.html#line73" class="location">Db\Table.php at line 73</a>
+
+<h3 id="getTriggers()">getTriggers</h3>
+<code class="signature">public  object <strong>getTriggers</strong>()</code>
+<div class="details">
+<p>返回所有触发器</p></div>
+
+<hr>
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../../overview-summary.html">Overview</a></li>
+<li><a href="../../suco/db/package-summary.html">Namespace</a></li>
+<li class="active">Class</li>
+<li><a href="../../suco/db/package-tree.html">Tree</a></li>
+<li><a href="../../overview-files.html">Files</a></li>
+<li><a href="../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../todo-list.html">Todo</a></li>
+<li><a href="../../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../../index.html" target="_top">Frames</a>
+<a href="../../suco\db\suco_db_table.html" target="_top">No frames</a>
+</div>
+<div class="small_links">
+Summary: <a href="#summary_field">Field</a> | <a href="#summary_method">Method</a> | <a href="#summary_constr">Constr</a>
+Detail: <a href="#detail_field">Field</a> | <a href="#detail_method">Method</a> | <a href="#summary_constr">Constr</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

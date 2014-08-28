@@ -1,0 +1,458 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:34 +0000">
+
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css">
+<link rel="start" href="../../../overview-summary.html">
+
+<title>Suco_Controller_Request_Http (SucoPHP API Doc)</title>
+
+</head>
+<body id="definition" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../suco/controller/request/package-summary.html">Namespace</a></li>
+<li class="active">Class</li>
+<li><a href="../../../suco/controller/request/package-tree.html">Tree</a></li>
+<li><a href="../../../overview-files.html">Files</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../todo-list.html">Todo</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../../../index.html" target="_top">Frames</a>
+<a href="../../../suco\controller\request\suco_controller_request_http.html" target="_top">No frames</a>
+</div>
+<div class="small_links">
+Summary: <a href="#summary_field">Field</a> | <a href="#summary_method">Method</a> | <a href="#summary_constr">Constr</a>
+Detail: <a href="#detail_field">Field</a> | <a href="#detail_method">Method</a> | <a href="#summary_constr">Constr</a>
+</div>
+<hr>
+
+<div class="qualifiedName">Suco\Controller\Request\Suco_Controller_Request_Http</div>
+<a href="../../../source/controller/request/http.php.html#line15" class="location">Controller\Request\Http.php at line 15</a>
+
+<h1>Class Suco_Controller_Request_Http</h1>
+
+<pre class="tree"><a href="../../../suco/controller/request/suco_controller_request_abstract.html">Suco_Controller_Request_Abstract</a><br>    └─<strong>Suco_Controller_Request_Http</strong><br /></pre>
+
+<hr>
+
+<p class="signature">public  class <strong>Suco_Controller_Request_Http</strong><br>extends <a href="../../../suco/controller/request/suco_controller_request_abstract.html">Suco_Controller_Request_Abstract</a>
+
+</p>
+
+<div class="comment" id="overview_description"><p>Suco_Controller_Request_Http 类, 对客户端请求进行封装</p></div>
+
+<dl>
+<dt>Version:</dt>
+<dd>2.0 2009/09/01</dd>
+<dt>Author:</dt>
+<dd>Eric Yu (blueflu@live.cn)</dd>
+<dt>Copyright:</dt>
+<dd>Copyright (c) 2008, Suconet, Inc.</dd>
+<dt>License:</dt>
+<dd>http://www.suconet.com/license</dd>
+</dl>
+<hr>
+
+<table id="summary_method">
+<tr><th colspan="2">Method Summary</th></tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setRouter()">setRouter</a>(mixed router)</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#getRouter()">getRouter</a>()</p></td>
+</tr>
+<tr>
+<td class="type"> string</td>
+<td class="description"><p class="name"><a href="#getRequestUri()">getRequestUri</a>()</p><p class="description">返回完整请求地址</p></td>
+</tr>
+<tr>
+<td class="type"> string</td>
+<td class="description"><p class="name"><a href="#getBaseUrl()">getBaseUrl</a>()</p><p class="description">返回请求基地址</p></td>
+</tr>
+<tr>
+<td class="type">static  string</td>
+<td class="description"><p class="name"><a href="#getBasePath()">getBasePath</a>()</p><p class="description">返回请求基目录</p></td>
+</tr>
+<tr>
+<td class="type">static  void</td>
+<td class="description"><p class="name"><a href="#getDomain()">getDomain</a>()</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#getSubdomain()">getSubdomain</a>()</p></td>
+</tr>
+<tr>
+<td class="type"> mixed</td>
+<td class="description"><p class="name"><a href="#getServer()">getServer</a>(string key)</p><p class="description">返回SERVER环境</p></td>
+</tr>
+<tr>
+<td class="type"> string</td>
+<td class="description"><p class="name"><a href="#getClientIp()">getClientIp</a>()</p><p class="description">返回客户端IP</p></td>
+</tr>
+<tr>
+<td class="type"> string</td>
+<td class="description"><p class="name"><a href="#getPathInfo()">getPathInfo</a>()</p><p class="description">返回PATH_INFO信息</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#getHost()">getHost</a>()</p></td>
+</tr>
+<tr>
+<td class="type"> string</td>
+<td class="description"><p class="name"><a href="#getMethod()">getMethod</a>()</p><p class="description">返回请求方式</p></td>
+</tr>
+<tr>
+<td class="type"> bool</td>
+<td class="description"><p class="name"><a href="#getPostToken()">getPostToken</a>()</p><p class="description">生成POST令牌</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setParams()">setParams</a>(mixed params)</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#getParams()">getParams</a>()</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setParam()">setParam</a>(mixed key, mixed value)</p></td>
+</tr>
+<tr>
+<td class="type"> mixed</td>
+<td class="description"><p class="name"><a href="#getParam()">getParam</a>(mixed key)</p><p class="description">返回指定参数</p></td>
+</tr>
+<tr>
+<td class="type"> array</td>
+<td class="description"><p class="name"><a href="#getQuerys()">getQuerys</a>()</p><p class="description">返回所有QUERY参数</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#setQuerys()">setQuerys</a>(mixed querys)</p></td>
+</tr>
+<tr>
+<td class="type"> bool</td>
+<td class="description"><p class="name"><a href="#getAjax()">getAjax</a>()</p><p class="description">判断并返回所有AJAX请求</p></td>
+</tr>
+<tr>
+<td class="type"> bool</td>
+<td class="description"><p class="name"><a href="#getPosts()">getPosts</a>()</p><p class="description">判断并返回所有POST请求</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#getFiles()">getFiles</a>()</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#getPost()">getPost</a>(mixed key)</p></td>
+</tr>
+<tr>
+<td class="type"> bool</td>
+<td class="description"><p class="name"><a href="#getPostOnce()">getPostOnce</a>()</p><p class="description">判断并返回所有POST请求, 并且不允许重复请求</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#isAjax()">isAjax</a>()</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#isPost()">isPost</a>()</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#isPostOnce()">isPostOnce</a>()</p></td>
+</tr>
+</table>
+
+<table class="inherit">
+<tr><th colspan="2">Methods inherited from Suco\Controller\Request\Suco_Controller_Request_Abstract</th></tr>
+<tr><td><a href="../../../suco/controller/request/suco_controller_request_abstract.html#count()">count</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#current()">current</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#get()">get</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#getActionKey()">getActionKey</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#getActionName()">getActionName</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#getControllerKey()">getControllerKey</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#getControllerName()">getControllerName</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#getModuleKey()">getModuleKey</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#getModuleName()">getModuleName</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#instance()">instance</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#key()">key</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#next()">next</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#offsetExists()">offsetExists</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#offsetGet()">offsetGet</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#offsetSet()">offsetSet</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#offsetUnset()">offsetUnset</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#rewind()">rewind</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#set()">set</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#setActionKey()">setActionKey</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#setActionName()">setActionName</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#setControllerKey()">setControllerKey</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#setControllerName()">setControllerName</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#setModuleKey()">setModuleKey</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#setModuleName()">setModuleName</a>, <a href="../../../suco/controller/request/suco_controller_request_abstract.html#valid()">valid</a></td></tr></table>
+
+<h2 id="detail_method">Method Detail</h2>
+<a href="../../../source/controller/request/http.php.html#line25" class="location">Controller\Request\Http.php at line 25</a>
+
+<h3 id="setRouter()">setRouter</h3>
+<code class="signature">public  void <strong>setRouter</strong>(mixed router)</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line36" class="location">Controller\Request\Http.php at line 36</a>
+
+<h3 id="getRouter()">getRouter</h3>
+<code class="signature">public  void <strong>getRouter</strong>()</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line48" class="location">Controller\Request\Http.php at line 48</a>
+
+<h3 id="getRequestUri()">getRequestUri</h3>
+<code class="signature">public  string <strong>getRequestUri</strong>()</code>
+<div class="details">
+<p>返回完整请求地址</p></div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line61" class="location">Controller\Request\Http.php at line 61</a>
+
+<h3 id="getBaseUrl()">getBaseUrl</h3>
+<code class="signature">public  string <strong>getBaseUrl</strong>()</code>
+<div class="details">
+<p>返回请求基地址</p></div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line79" class="location">Controller\Request\Http.php at line 79</a>
+
+<h3 id="getBasePath()">getBasePath</h3>
+<code class="signature">public static  string <strong>getBasePath</strong>()</code>
+<div class="details">
+<p>返回请求基目录</p></div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line94" class="location">Controller\Request\Http.php at line 94</a>
+
+<h3 id="getDomain()">getDomain</h3>
+<code class="signature">public static  void <strong>getDomain</strong>()</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line99" class="location">Controller\Request\Http.php at line 99</a>
+
+<h3 id="getSubdomain()">getSubdomain</h3>
+<code class="signature">public  void <strong>getSubdomain</strong>()</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line114" class="location">Controller\Request\Http.php at line 114</a>
+
+<h3 id="getServer()">getServer</h3>
+<code class="signature">public  mixed <strong>getServer</strong>(string key)</code>
+<div class="details">
+<p>返回SERVER环境</p></div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line123" class="location">Controller\Request\Http.php at line 123</a>
+
+<h3 id="getClientIp()">getClientIp</h3>
+<code class="signature">public  string <strong>getClientIp</strong>()</code>
+<div class="details">
+<p>返回客户端IP</p></div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line139" class="location">Controller\Request\Http.php at line 139</a>
+
+<h3 id="getPathInfo()">getPathInfo</h3>
+<code class="signature">public  string <strong>getPathInfo</strong>()</code>
+<div class="details">
+<p>返回PATH_INFO信息</p></div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line157" class="location">Controller\Request\Http.php at line 157</a>
+
+<h3 id="getHost()">getHost</h3>
+<code class="signature">public  void <strong>getHost</strong>()</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line168" class="location">Controller\Request\Http.php at line 168</a>
+
+<h3 id="getMethod()">getMethod</h3>
+<code class="signature">public  string <strong>getMethod</strong>()</code>
+<div class="details">
+<p>返回请求方式</p></div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line177" class="location">Controller\Request\Http.php at line 177</a>
+
+<h3 id="getPostToken()">getPostToken</h3>
+<code class="signature">public  bool <strong>getPostToken</strong>()</code>
+<div class="details">
+<p>生成POST令牌</p></div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line182" class="location">Controller\Request\Http.php at line 182</a>
+
+<h3 id="setParams()">setParams</h3>
+<code class="signature">public  void <strong>setParams</strong>(mixed params)</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line187" class="location">Controller\Request\Http.php at line 187</a>
+
+<h3 id="getParams()">getParams</h3>
+<code class="signature">public  void <strong>getParams</strong>()</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line192" class="location">Controller\Request\Http.php at line 192</a>
+
+<h3 id="setParam()">setParam</h3>
+<code class="signature">public  void <strong>setParam</strong>(mixed key, mixed value)</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line201" class="location">Controller\Request\Http.php at line 201</a>
+
+<h3 id="getParam()">getParam</h3>
+<code class="signature">public  mixed <strong>getParam</strong>(mixed key)</code>
+<div class="details">
+<p>返回指定参数</p></div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line215" class="location">Controller\Request\Http.php at line 215</a>
+
+<h3 id="getQuerys()">getQuerys</h3>
+<code class="signature">public  array <strong>getQuerys</strong>()</code>
+<div class="details">
+<p>返回所有QUERY参数</p></div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line224" class="location">Controller\Request\Http.php at line 224</a>
+
+<h3 id="setQuerys()">setQuerys</h3>
+<code class="signature">public  void <strong>setQuerys</strong>(mixed querys)</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line233" class="location">Controller\Request\Http.php at line 233</a>
+
+<h3 id="getAjax()">getAjax</h3>
+<code class="signature">public  bool <strong>getAjax</strong>()</code>
+<div class="details">
+<p>判断并返回所有AJAX请求</p></div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line242" class="location">Controller\Request\Http.php at line 242</a>
+
+<h3 id="getPosts()">getPosts</h3>
+<code class="signature">public  bool <strong>getPosts</strong>()</code>
+<div class="details">
+<p>判断并返回所有POST请求</p></div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line247" class="location">Controller\Request\Http.php at line 247</a>
+
+<h3 id="getFiles()">getFiles</h3>
+<code class="signature">public  void <strong>getFiles</strong>()</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line252" class="location">Controller\Request\Http.php at line 252</a>
+
+<h3 id="getPost()">getPost</h3>
+<code class="signature">public  void <strong>getPost</strong>(mixed key)</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line261" class="location">Controller\Request\Http.php at line 261</a>
+
+<h3 id="getPostOnce()">getPostOnce</h3>
+<code class="signature">public  bool <strong>getPostOnce</strong>()</code>
+<div class="details">
+<p>判断并返回所有POST请求, 并且不允许重复请求</p></div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line266" class="location">Controller\Request\Http.php at line 266</a>
+
+<h3 id="isAjax()">isAjax</h3>
+<code class="signature">public  void <strong>isAjax</strong>()</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line271" class="location">Controller\Request\Http.php at line 271</a>
+
+<h3 id="isPost()">isPost</h3>
+<code class="signature">public  void <strong>isPost</strong>()</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/controller/request/http.php.html#line276" class="location">Controller\Request\Http.php at line 276</a>
+
+<h3 id="isPostOnce()">isPostOnce</h3>
+<code class="signature">public  void <strong>isPostOnce</strong>()</code>
+<div class="details">
+</div>
+
+<hr>
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../suco/controller/request/package-summary.html">Namespace</a></li>
+<li class="active">Class</li>
+<li><a href="../../../suco/controller/request/package-tree.html">Tree</a></li>
+<li><a href="../../../overview-files.html">Files</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../todo-list.html">Todo</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../../../index.html" target="_top">Frames</a>
+<a href="../../../suco\controller\request\suco_controller_request_http.html" target="_top">No frames</a>
+</div>
+<div class="small_links">
+Summary: <a href="#summary_field">Field</a> | <a href="#summary_method">Method</a> | <a href="#summary_constr">Constr</a>
+Detail: <a href="#detail_field">Field</a> | <a href="#detail_method">Method</a> | <a href="#summary_constr">Constr</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>

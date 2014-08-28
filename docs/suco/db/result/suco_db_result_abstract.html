@@ -1,0 +1,215 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="generator" content="PHPDoctor 2.0.5 (http://peej.github.com/phpdoctor/)">
+<meta name="when" content="Wed, 19 Feb 2014 01:42:35 +0000">
+
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css">
+<link rel="start" href="../../../overview-summary.html">
+
+<title>Suco_Db_Result_Abstract (SucoPHP API Doc)</title>
+
+</head>
+<body id="definition" onload="parent.document.title=document.title;">
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../suco/db/result/package-summary.html">Namespace</a></li>
+<li class="active">Class</li>
+<li><a href="../../../suco/db/result/package-tree.html">Tree</a></li>
+<li><a href="../../../overview-files.html">Files</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../todo-list.html">Todo</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../../../index.html" target="_top">Frames</a>
+<a href="../../../suco\db\result\suco_db_result_abstract.html" target="_top">No frames</a>
+</div>
+<div class="small_links">
+Summary: <a href="#summary_field">Field</a> | <a href="#summary_method">Method</a> | <a href="#summary_constr">Constr</a>
+Detail: <a href="#detail_field">Field</a> | <a href="#detail_method">Method</a> | <a href="#summary_constr">Constr</a>
+</div>
+<hr>
+
+<div class="qualifiedName">Suco\Db\Result\Suco_Db_Result_Abstract</div>
+<a href="../../../source/db/result/abstract.php.html#line13" class="location">Db\Result\Abstract.php at line 13</a>
+
+<h1>Class Suco_Db_Result_Abstract</h1>
+
+<pre class="tree"><strong>Suco_Db_Result_Abstract</strong><br /></pre>
+
+<dl>
+<dt>All Known Subclasses:</dt>
+<dd><a href="../../../suco/db/result/suco_db_result_mssql.html">Suco_Db_Result_Mssql</a> <a href="../../../suco/db/result/suco_db_result_mysql.html">Suco_Db_Result_Mysql</a> <a href="../../../suco/db/result/suco_db_result_sqlsrv.html">Suco_Db_Result_Sqlsrv</a> </dd>
+</dl>
+
+<hr>
+
+<p class="signature">public abstract  class <strong>Suco_Db_Result_Abstract</strong></p>
+
+<div class="comment" id="overview_description"><p>返回记录集抽象类</p></div>
+
+<dl>
+<dt>Version:</dt>
+<dd>3.0 2009/09/01 01:31</dd>
+<dt>Author:</dt>
+<dd>blueflu (lqhuanle@163.com)</dd>
+<dt>Copyright:</dt>
+<dd>Copyright (c) 2008, Suconet, Inc.</dd>
+<dt>License:</dt>
+<dd>http://www.suconet.com/license</dd>
+</dl>
+<hr>
+
+<table id="summary_constructor">
+<tr><th colspan="2">Constructor Summary</th></tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#__construct()">__construct</a>(mixed result, bool fieldNameLower)</p></td>
+</tr>
+</table>
+
+<table id="summary_method">
+<tr><th colspan="2">Method Summary</th></tr>
+<tr>
+<td class="type">abstract  void</td>
+<td class="description"><p class="name"><a href="#free()">free</a>()</p></td>
+</tr>
+<tr>
+<td class="type">abstract  void</td>
+<td class="description"><p class="name"><a href="#fetchRow()">fetchRow</a>()</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#fetchRows()">fetchRows</a>()</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#fetchCol()">fetchCol</a>(mixed field)</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#fetchCols()">fetchCols</a>(mixed field)</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#fetchAll()">fetchAll</a>()</p></td>
+</tr>
+<tr>
+<td class="type"> void</td>
+<td class="description"><p class="name"><a href="#fetchOnKey()">fetchOnKey</a>(mixed key)</p></td>
+</tr>
+</table>
+
+<h2 id="detail_method">Constructor Detail</h2>
+<a href="../../../source/db/result/abstract.php.html#line17" class="location">Db\Result\Abstract.php at line 17</a>
+
+<h3 id="__construct()">__construct</h3>
+<code class="signature">public  void <strong>__construct</strong>(mixed result, bool fieldNameLower)</code>
+<div class="details">
+</div>
+
+<hr>
+
+<h2 id="detail_method">Method Detail</h2>
+<a href="../../../source/db/result/abstract.php.html#line22" class="location">Db\Result\Abstract.php at line 22</a>
+
+<h3 id="free()">free</h3>
+<code class="signature">public abstract  void <strong>free</strong>()</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/db/result/abstract.php.html#line24" class="location">Db\Result\Abstract.php at line 24</a>
+
+<h3 id="fetchRow()">fetchRow</h3>
+<code class="signature">public abstract  void <strong>fetchRow</strong>()</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/db/result/abstract.php.html#line26" class="location">Db\Result\Abstract.php at line 26</a>
+
+<h3 id="fetchRows()">fetchRows</h3>
+<code class="signature">public  void <strong>fetchRows</strong>()</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/db/result/abstract.php.html#line36" class="location">Db\Result\Abstract.php at line 36</a>
+
+<h3 id="fetchCol()">fetchCol</h3>
+<code class="signature">public  void <strong>fetchCol</strong>(mixed field)</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/db/result/abstract.php.html#line42" class="location">Db\Result\Abstract.php at line 42</a>
+
+<h3 id="fetchCols()">fetchCols</h3>
+<code class="signature">public  void <strong>fetchCols</strong>(mixed field)</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/db/result/abstract.php.html#line51" class="location">Db\Result\Abstract.php at line 51</a>
+
+<h3 id="fetchAll()">fetchAll</h3>
+<code class="signature">public  void <strong>fetchAll</strong>()</code>
+<div class="details">
+</div>
+
+<hr>
+
+<a href="../../../source/db/result/abstract.php.html#line56" class="location">Db\Result\Abstract.php at line 56</a>
+
+<h3 id="fetchOnKey()">fetchOnKey</h3>
+<code class="signature">public  void <strong>fetchOnKey</strong>(mixed key)</code>
+<div class="details">
+</div>
+
+<hr>
+
+<div class="header">
+<h1>SucoPHP Doc</h1>
+<ul>
+<li><a href="../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../suco/db/result/package-summary.html">Namespace</a></li>
+<li class="active">Class</li>
+<li><a href="../../../suco/db/result/package-tree.html">Tree</a></li>
+<li><a href="../../../overview-files.html">Files</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../todo-list.html">Todo</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+</ul>
+</div>
+
+<div class="small_links">
+<a href="../../../index.html" target="_top">Frames</a>
+<a href="../../../suco\db\result\suco_db_result_abstract.html" target="_top">No frames</a>
+</div>
+<div class="small_links">
+Summary: <a href="#summary_field">Field</a> | <a href="#summary_method">Method</a> | <a href="#summary_constr">Constr</a>
+Detail: <a href="#detail_field">Field</a> | <a href="#detail_method">Method</a> | <a href="#summary_constr">Constr</a>
+</div>
+<hr>
+
+<p id="footer">This document was generated by <a href="http://peej.github.com/phpdoctor/">PHPDoctor: The PHP Documentation Creator</a></p>
+
+</body>
+
+</html>
